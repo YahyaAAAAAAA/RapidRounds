@@ -1,0 +1,5 @@
+main:
+    ☐ add .env (firebase_option have keys) then make github repo
+    ☐ bring back 3s delay between rounds
+    ☐ fix player remove
+    ☐ points
