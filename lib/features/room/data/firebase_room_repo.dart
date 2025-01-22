@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:rapid_rounds/config/enums/player_state.dart';
 import 'package:rapid_rounds/config/enums/room_state.dart';
@@ -27,7 +29,10 @@ class FirebaseRoomRepo implements RoomRepo {
       'currentMiniGame': '',
       'gameSequence': shuffledGames,
       'roundStartTime': FieldValue.serverTimestamp(),
+      //todo should be dynamic based on number of games that requires delay
+      'delays': [Random().nextInt(4000000) + 2000000],
     });
+    //print success
 
     await firestore
         .collection('rooms')
@@ -36,10 +41,11 @@ class FirebaseRoomRepo implements RoomRepo {
         .doc(deviceId)
         .set({
       'id': deviceId,
-      'name': 'playerName',
+      'name': 'playerName 1',
       'points': 0,
       'state': PlayerState.playing.name,
-      'finishTime': [],
+      'finishTimes': <int>[],
+      'fails': <bool>[],
     });
 
     return roomId;
@@ -130,7 +136,8 @@ class FirebaseRoomRepo implements RoomRepo {
       'name': 'playerName', //todo
       'points': 0,
       'state': PlayerState.playing.name,
-      'finishTime': [],
+      'finishTimes': <int>[],
+      'fails': <bool>[],
     };
 
     // Add the player to the players list using arrayUnion
@@ -293,10 +300,13 @@ class FirebaseRoomRepo implements RoomRepo {
   Future<void> onPlayerComplete(
     String roomId,
     String playerId,
-    DateTime finishTime,
+    int? gameDelayMicroSeconds,
+    bool? didFail,
   ) async {
     final roomRef = FirebaseFirestore.instance.collection('rooms').doc(roomId);
     final playerRef = roomRef.collection('players').doc(playerId);
+
+    final DateTime delayStart = DateTime.now().toUtc();
 
     // Fetch the room document
     final roomSnapshot = await roomRef.get();
@@ -320,9 +330,10 @@ class FirebaseRoomRepo implements RoomRepo {
     // Store the server timestamp in the player's document
     await playerRef.update({
       'state': PlayerState.done.name,
-      'completionTime':
-          FieldValue.serverTimestamp(), // Store the server's current time
+      'completionTime': FieldValue.serverTimestamp(),
     });
+
+    final DateTime delayEnd = DateTime.now().toUtc();
 
     // Fetch the updated player document to get the server timestamp
     final updatedPlayerSnapshot = await playerRef.get();
@@ -342,18 +353,36 @@ class FirebaseRoomRepo implements RoomRepo {
     final int elapsedMicroSeconds =
         completionTime.difference(roundStartTime).inMicroseconds;
 
+    final int elapsedDelayMicroSeconds =
+        delayEnd.difference(delayStart).inMicroseconds;
+
+    // ignore: avoid_print
     print('Start Time $roundStartTime');
+    // ignore: avoid_print
     print('Finish Time $completionTime');
-    print('Elapsed Seconds $elapsedMicroSeconds');
+    // ignore: avoid_print
+    print('Elapsed Player Microseconds $elapsedMicroSeconds');
+    // ignore: avoid_print
+    print('Elapsed Server Delay Microseconds $elapsedDelayMicroSeconds');
+    // ignore: avoid_print
+    print('Elapsed Delay Microseconds $gameDelayMicroSeconds');
 
     // Append the elapsedSeconds to the finishTime list
     final List<int> finishTimes =
-        List<int>.from(updatedPlayerData['finishTime'] ?? []);
-    finishTimes.add(elapsedMicroSeconds);
+        List<int>.from(updatedPlayerData['finishTimes'] ?? []);
+    finishTimes.add(elapsedMicroSeconds -
+        elapsedDelayMicroSeconds -
+        (gameDelayMicroSeconds ?? 0));
+
+    //add to fails
+    final List<bool> fails = List<bool>.from(updatedPlayerData['fails'] ?? []);
+
+    fails.add(didFail ?? false);
 
     // Update the finishTime list in the player's document
     await playerRef.update({
-      'finishTime': finishTimes,
+      'finishTimes': finishTimes,
+      'fails': fails,
     });
   }
 

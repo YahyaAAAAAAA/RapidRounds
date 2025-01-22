@@ -25,7 +25,8 @@ abstract class RoomRepo {
   Future<void> onPlayerComplete(
     String roomId,
     String playerId,
-    DateTime finishTime,
+    int? gameDelayMicroSeconds,
+    bool? didFail,
   );
 
   Future<bool> isAllPlayersDone(String roomId);

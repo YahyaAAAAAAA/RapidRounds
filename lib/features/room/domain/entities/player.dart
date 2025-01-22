@@ -6,6 +6,7 @@ class Player {
   PlayerState state;
   int points; // Player's current score
   List<int> finishTimes; // Times taken to complete rounds (in seconds)
+  List<bool> fails;
 
   Player({
     required this.id,
@@ -13,6 +14,7 @@ class Player {
     this.points = 0,
     this.state = PlayerState.playing,
     this.finishTimes = const [],
+    this.fails = const [],
   });
 
   factory Player.fromJson(Map<String, dynamic> json) {
@@ -21,7 +23,8 @@ class Player {
       name: json['name'],
       points: json['points'] ?? 0,
       state: PlayerState.values.firstWhere((e) => e.name == json['state']),
-      finishTimes: List<int>.from(json['finishTime'] ?? []),
+      finishTimes: List<int>.from(json['finishTimes'] ?? []),
+      fails: List<bool>.from(json['fails'] ?? []),
     );
   }
 
@@ -31,7 +34,8 @@ class Player {
       'name': name,
       'points': points,
       'state': state.name,
-      'finishTime': finishTimes,
+      'finishTimes': finishTimes,
+      'fails': fails,
     };
   }
 }

@@ -8,7 +8,6 @@ import 'package:rapid_rounds/firebase_options.dart';
 import 'package:rapid_rounds/features/home/presentation/home_page.dart';
 
 void main() async {
-  //flutter run --no-enable-impeller
   //load env variables
   await dotenv.load(fileName: '.env');
 

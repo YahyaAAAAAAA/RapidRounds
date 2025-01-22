@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rapid_rounds/config/enums/player_state.dart';
@@ -76,53 +77,7 @@ class _RoomPageState extends State<RoomPage> {
           if (state is RoomBetweenRounds) {
             final players = state.roomWithPlayers.players;
 
-            return ListView.builder(
-              itemCount: players.length,
-              padding: EdgeInsets.all(8),
-              itemBuilder: (context, index) {
-                return ListView(
-                  shrinkWrap: true,
-                  padding: EdgeInsets.all(8),
-                  physics: NeverScrollableScrollPhysics(),
-                  children: [
-                    Text(
-                      players[index].name,
-                      style: TextStyle(
-                        fontSize: 17,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    //todo change this to Wrap
-                    SizedBox(
-                      height: 50,
-                      child: ListView.separated(
-                        shrinkWrap: true,
-                        itemCount: players[index].finishTimes.length,
-                        scrollDirection: Axis.horizontal,
-                        // physics: NeverScrollableScrollPhysics(),
-                        separatorBuilder: (context, index) =>
-                            SizedBox(width: 10),
-                        itemBuilder: (context, jndex) {
-                          return Text(
-                            players[index].finishTimes[jndex].toReadableTime(),
-                            style: TextStyle(
-                              color: players[index].finishTimes[jndex] ==
-                                      state.minTime
-                                  ? Colors.green
-                                  : Colors.black,
-                              fontWeight: players[index].finishTimes[jndex] ==
-                                      state.minTime
-                                  ? FontWeight.bold
-                                  : FontWeight.normal,
-                            ),
-                          );
-                        },
-                      ),
-                    ),
-                  ],
-                );
-              },
-            );
+            return _buildBetweenRounds(players, state);
           }
 
           if (state is RoomGameOver) {
@@ -173,6 +128,59 @@ class _RoomPageState extends State<RoomPage> {
     );
   }
 
+  Widget _buildBetweenRounds(List<Player> players, RoomBetweenRounds state) {
+    return ListView.builder(
+      itemCount: players.length,
+      padding: EdgeInsets.all(8),
+      itemBuilder: (context, index) {
+        return ListView(
+          shrinkWrap: true,
+          padding: EdgeInsets.all(8),
+          physics: NeverScrollableScrollPhysics(),
+          children: [
+            Text(
+              players[index].name,
+              style: TextStyle(
+                fontSize: 17,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            //todo change this to Wrap
+            SizedBox(
+              height: 50,
+              child: ListView.separated(
+                shrinkWrap: true,
+                itemCount: players[index].finishTimes.length,
+                scrollDirection: Axis.horizontal,
+                // physics: NeverScrollableScrollPhysics(),
+                separatorBuilder: (context, index) => SizedBox(width: 10),
+                itemBuilder: (context, jndex) {
+                  return Text(
+                    players[index].fails[jndex]
+                        ? 'Failed'
+                        : players[index].finishTimes[jndex].toReadableTime(),
+                    style: TextStyle(
+                      color: players[index].fails[jndex]
+                          ? Colors.red
+                          : players[index].finishTimes[jndex] == state.minTime
+                              ? Colors.green
+                              : Colors.black,
+                      fontWeight: players[index].fails[jndex]
+                          ? FontWeight.normal
+                          : players[index].finishTimes[jndex] == state.minTime
+                              ? FontWeight.bold
+                              : FontWeight.normal,
+                    ),
+                  );
+                },
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   Widget _buildRoomWaiting(List<Player> players) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -214,7 +222,11 @@ class _RoomPageState extends State<RoomPage> {
   Widget _buildMiniGame(Room room) {
     final miniGames = [
       MiniGame1(
-          roomCubit: roomCubit, roomId: widget.roomId, onComplete: _nextRound),
+        roomCubit: roomCubit,
+        roomId: widget.roomId,
+        onComplete: _nextRound,
+        delay: room.delays[0],
+      ),
       MiniGame2(
           roomCubit: roomCubit, roomId: widget.roomId, onComplete: _nextRound),
       MiniGame3(
@@ -281,23 +293,34 @@ class _RoomPageState extends State<RoomPage> {
 class MiniGame1 extends StatefulWidget {
   final RoomCubit roomCubit;
   final String roomId;
+  final int delay;
   final VoidCallback onComplete;
 
-  const MiniGame1(
-      {required this.roomCubit,
-      required this.roomId,
-      required this.onComplete,
-      super.key});
+  const MiniGame1({
+    required this.roomCubit,
+    required this.roomId,
+    required this.onComplete,
+    required this.delay,
+    super.key,
+  });
 
   @override
   State<MiniGame1> createState() => _MiniGame1State();
 }
 
 class _MiniGame1State extends State<MiniGame1> {
+  Timer? timer;
   bool hasAnswered = false;
+  bool didFail = false;
+  Color color = Colors.red;
 
-  void _onAnswer() async {
+  void onAnswer() async {
     if (hasAnswered) return;
+
+    //player failed
+    if (color == Colors.red) {
+      didFail = true;
+    }
 
     setState(() {
       hasAnswered = true;
@@ -306,19 +329,64 @@ class _MiniGame1State extends State<MiniGame1> {
     // await widget.roomCubit
     //     .updatePlayerScore(widget.roomId, widget.roomCubit.deviceId, 10);
 
-    await widget.roomCubit.onPlayerComplete(widget.roomId);
+    await widget.roomCubit.onPlayerComplete(
+      widget.roomId,
+      widget.delay,
+      didFail,
+    );
 
     widget.roomCubit.isAllPlayersDone(widget.roomId);
   }
 
+  void startGame(int delay) {
+    timer = Timer(Duration(microseconds: delay), () {
+      setState(() {
+        color = Colors.green;
+      });
+    });
+  }
+
+  @override
+  void initState() {
+    startGame(widget.delay);
+
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    timer!.cancel();
+
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: ElevatedButton(
-        onPressed: _onAnswer,
-        child: const Text('Press me!'),
-      ),
-    );
+    return !hasAnswered
+        ? GestureDetector(
+            onTap: () => onAnswer(),
+            child: Container(
+              color: color,
+              child: Center(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      color == Colors.red ? 'Wait for green' : 'Tap Now!',
+                      style: TextStyle(fontSize: 24, color: Colors.white),
+                      textAlign: TextAlign.center,
+                    ),
+                    SizedBox(height: 20),
+                  ],
+                ),
+              ),
+            ),
+          )
+        : Center(
+            child: Text(
+              'Please Wait for other Players',
+            ),
+          );
   }
 }
 

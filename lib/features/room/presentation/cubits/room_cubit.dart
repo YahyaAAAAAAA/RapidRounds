@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rapid_rounds/config/enums/room_state.dart';
 import 'package:rapid_rounds/features/room/domain/entities/player.dart';
@@ -88,11 +87,15 @@ class RoomCubit extends Cubit<RoomStates> {
       throw StateError('No player has a recorded finish time.');
     }
 
-    // Initialize min with the first valid player's last finish time
-    int min = validPlayers.first.finishTimes.last;
+    //initialize min
+    int min = Duration(days: 3000).inMicroseconds;
 
     // Iterate through the valid players to find the minimum time
     for (final player in validPlayers) {
+      //failed player don't count
+      if (player.fails.last) {
+        continue;
+      }
       if (player.finishTimes.last < min) {
         min = player.finishTimes.last;
       }
@@ -144,42 +147,13 @@ class RoomCubit extends Cubit<RoomStates> {
     }
   }
 
-  Future<void> onPlayerComplete(String roomId) async {
+  Future<void> onPlayerComplete(
+      String roomId, int? delay, bool? didFail) async {
     try {
-      await roomRepo.onPlayerComplete(roomId, deviceId, DateTime.now());
+      await roomRepo.onPlayerComplete(roomId, deviceId, delay, didFail);
     } catch (e) {
       emit(RoomError('Error moving to next round: ${e.toString()}'));
     }
-  }
-
-  /// Synchronize mini-game state for all players
-  Widget getMiniGameWidget(String roomId, int round) {
-    final roomStream = roomRepo.listen(roomId);
-
-    return StreamBuilder(
-      stream: roomStream,
-      builder: (context, snapshot) {
-        if (snapshot.hasError) {
-          return Center(child: Text('Error: ${snapshot.error}'));
-        }
-        if (!snapshot.hasData) {
-          return const Center(child: CircularProgressIndicator());
-        }
-
-        final roomWithPlayers = snapshot.data!;
-        if (roomWithPlayers.room.currentRound < 1 ||
-            roomWithPlayers.room.currentRound >
-                roomWithPlayers.room.gameSequence.length) {
-          return const Center(
-              child: Text('No mini-game available for this round.'));
-        }
-
-        // Dynamically load the correct mini-game
-        final miniGame = roomWithPlayers
-            .room.gameSequence[roomWithPlayers.room.currentRound - 1];
-        return Center(child: Text('Mini-Game: $miniGame'));
-      },
-    );
   }
 
   @override
