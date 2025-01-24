@@ -1,8 +1,7 @@
-import 'dart:math';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:rapid_rounds/config/enums/player_state.dart';
 import 'package:rapid_rounds/config/enums/room_state.dart';
+import 'package:rapid_rounds/features/games/game.dart';
 import 'package:rapid_rounds/features/room/domain/entities/player.dart';
 import 'package:rapid_rounds/features/room/domain/entities/room.dart';
 import 'package:rapid_rounds/features/room/domain/entities/room_with_players.dart';
@@ -14,12 +13,13 @@ class FirebaseRoomRepo implements RoomRepo {
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
 
   @override
-  Future<String> createRoom(String deviceId) async {
+  Future<String> createRoom(String deviceId, List<Game> games) async {
     final roomId = const Uuid().v4().substring(0, 6).toUpperCase();
 
     // Generate a randomized sequence of mini-games
     final shuffledGames = ['game1', 'game2', 'game3']..shuffle();
 
+    //add room
     await firestore.collection('rooms').doc(roomId).set({
       'id': roomId,
       'creator': deviceId,
@@ -29,11 +29,9 @@ class FirebaseRoomRepo implements RoomRepo {
       'currentMiniGame': '',
       'gameSequence': shuffledGames,
       'roundStartTime': FieldValue.serverTimestamp(),
-      //todo should be dynamic based on number of games that requires delay
-      'delays': [Random().nextInt(4000000) + 2000000],
     });
-    //print success
 
+    //add creator as first player
     await firestore
         .collection('rooms')
         .doc(roomId)
@@ -48,7 +46,22 @@ class FirebaseRoomRepo implements RoomRepo {
       'fails': <bool>[],
     });
 
+    //add games
+    await addGames(roomId, games);
+
     return roomId;
+  }
+
+  Future<void> addGames(String roomId, List<Game> games) async {
+    for (int i = 0; i < games.length; i++) {
+      games[i].roomId = roomId;
+      await FirebaseFirestore.instance
+          .collection('rooms')
+          .doc(roomId)
+          .collection('games')
+          .doc(i.toString()) //games[i].id
+          .set(games[i].toJson());
+    }
   }
 
   @override
@@ -80,7 +93,7 @@ class FirebaseRoomRepo implements RoomRepo {
     return false;
   }
 
-  //TODO
+  //todo
   @override
   Future<void> removePlayerFromRoom(String roomId, String deviceId) async {
     final docRef = firestore.collection('rooms').doc(roomId);
@@ -150,8 +163,9 @@ class FirebaseRoomRepo implements RoomRepo {
   Stream<RoomWithPlayers> listen(String roomId) {
     final roomRef = FirebaseFirestore.instance.collection('rooms').doc(roomId);
     final playersRef = roomRef.collection('players');
+    final gamesRef = roomRef.collection('games');
 
-    // Listen to the room document
+    //listen to the room document
     final roomStream = roomRef.snapshots().map((snapshot) {
       if (!snapshot.exists) {
         throw Exception('Room with ID $roomId does not exist');
@@ -165,7 +179,7 @@ class FirebaseRoomRepo implements RoomRepo {
       return Room.fromJson(data);
     });
 
-    // Listen to the players subcollection
+    //listen to the players subcollection
     final playersStream = playersRef.snapshots().map((querySnapshot) {
       return querySnapshot.docs.map((doc) {
         final data = doc.data();
@@ -173,10 +187,18 @@ class FirebaseRoomRepo implements RoomRepo {
       }).toList();
     });
 
-    // Combine the room and players streams into one
-    return Rx.combineLatest2(roomStream, playersStream,
-        (Room room, List<Player> players) {
-      return RoomWithPlayers(room: room, players: players);
+    //listen to the players subcollection
+    final gamesStream = gamesRef.snapshots().map((querySnapshot) {
+      return querySnapshot.docs.map((doc) {
+        final data = doc.data();
+        return Game.fromJson(data);
+      }).toList();
+    });
+
+    //combine the room, players and games streams into one
+    return Rx.combineLatest3(roomStream, playersStream, gamesStream,
+        (Room room, List<Player> players, List<Game> games) {
+      return RoomWithPlayers(room: room, players: players, games: games);
     });
   }
 
@@ -257,10 +279,10 @@ class FirebaseRoomRepo implements RoomRepo {
     await Future.delayed(
       Duration(seconds: 3),
       () async {
-        // await roomRef.update({
-        //   'state': RoomState.started.name,
-        //   'roundStartTime': FieldValue.serverTimestamp(),
-        // });
+        await roomRef.update({
+          'state': RoomState.started.name,
+          'roundStartTime': FieldValue.serverTimestamp(),
+        });
       },
     );
   }

@@ -2,14 +2,14 @@ import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
 
-class ColorGridScreen extends StatefulWidget {
-  const ColorGridScreen({super.key});
+class ColorMatchWidget extends StatefulWidget {
+  const ColorMatchWidget({super.key});
 
   @override
-  _ColorGridScreenState createState() => _ColorGridScreenState();
+  State<ColorMatchWidget> createState() => _ColorMatchWidgetState();
 }
 
-class _ColorGridScreenState extends State<ColorGridScreen> {
+class _ColorMatchWidgetState extends State<ColorMatchWidget> {
   static const int gridSize = 4;
   static const Duration revealDuration = Duration(seconds: 3);
 

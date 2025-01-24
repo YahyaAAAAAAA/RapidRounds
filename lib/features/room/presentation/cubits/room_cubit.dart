@@ -1,7 +1,10 @@
 import 'dart:async';
+import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rapid_rounds/config/enums/room_state.dart';
+import 'package:rapid_rounds/features/games/game.dart';
+import 'package:rapid_rounds/features/games/reaction%20button/reaction_button.dart';
 import 'package:rapid_rounds/features/room/domain/entities/player.dart';
 import 'package:rapid_rounds/features/room/domain/room_repo.dart';
 import 'package:rapid_rounds/features/room/presentation/cubits/room_state.dart';
@@ -18,13 +21,38 @@ class RoomCubit extends Cubit<RoomStates> {
 
   Future<String> createRoom() async {
     try {
-      final roomId = await roomRepo.createRoom(deviceId);
+      final roomId = await roomRepo.createRoom(deviceId, generateGames());
       emit(RoomCreated(roomId));
       return roomId;
     } catch (e) {
       emit(RoomError(e.toString()));
       return '';
     }
+  }
+
+  List<Game> generateGames() {
+    // final random = Random();
+    final games = <Game>[];
+
+    for (int i = 0; i < 30; i++) {
+      // final gameType = random.nextInt(3);
+      final gameType = 0;
+
+      switch (gameType) {
+        case 0:
+          games.add(
+            ReactionButton(
+              id: i.toString(),
+              roomId: 'temp',
+              type: 'ReactionButton',
+              delay: Random().nextInt(4000000) + 2000000,
+            ),
+          );
+          break;
+      }
+    }
+
+    return games;
   }
 
   Future<bool> joinRoom(String roomId) async {

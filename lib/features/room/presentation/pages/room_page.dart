@@ -3,6 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rapid_rounds/config/enums/player_state.dart';
 import 'package:rapid_rounds/config/extensions/int_extensions.dart';
+import 'package:rapid_rounds/features/games/game.dart';
+import 'package:rapid_rounds/features/games/reaction%20button/reaction_button.dart';
+import 'package:rapid_rounds/features/games/reaction%20button/reaction_button_widget.dart';
 import 'package:rapid_rounds/features/room/domain/entities/player.dart';
 import 'package:rapid_rounds/features/room/domain/entities/room.dart';
 import 'package:rapid_rounds/features/room/presentation/cubits/room_cubit.dart';
@@ -67,11 +70,13 @@ class _RoomPageState extends State<RoomPage> {
 
           if (state is RoomWaiting) {
             final players = state.roomWithPlayers.players;
+
             return _buildRoomWaiting(players);
           }
 
           if (state is RoomInGame) {
-            return _buildMiniGame(state.roomWithPlayers.room);
+            return _buildMiniGame(
+                state.roomWithPlayers.room, state.roomWithPlayers.games);
           }
 
           if (state is RoomBetweenRounds) {
@@ -219,19 +224,26 @@ class _RoomPageState extends State<RoomPage> {
     );
   }
 
-  Widget _buildMiniGame(Room room) {
-    final miniGames = [
-      MiniGame1(
-        roomCubit: roomCubit,
-        roomId: widget.roomId,
-        onComplete: _nextRound,
-        delay: room.delays[0],
-      ),
-      MiniGame2(
-          roomCubit: roomCubit, roomId: widget.roomId, onComplete: _nextRound),
-      MiniGame3(
-          roomCubit: roomCubit, roomId: widget.roomId, onComplete: _nextRound),
-    ];
+  Widget _buildMiniGame(Room room, List<Game> games) {
+    final miniGames = List<Widget>.generate(
+      games.length,
+      (i) {
+        switch (games[i].type) {
+          case 'ReactionButton':
+            final reactionButton = games[i];
+            if (reactionButton is ReactionButton) {
+              return ReactionButtonWidget(
+                reactionButton: reactionButton,
+                roomCubit: roomCubit,
+              );
+            }
+          default:
+            return Text('error');
+        }
+
+        return Text('error 2');
+      },
+    );
 
     final currentRound = room.currentRound;
     if (currentRound < 1 || currentRound > miniGames.length) {
@@ -243,7 +255,7 @@ class _RoomPageState extends State<RoomPage> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Text(
-          'Round $currentRound / ${room.totalRounds}',
+          'Round $currentRound / ${games.length}',
           style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 20),

@@ -9,7 +9,6 @@ class Room {
   String currentMiniGame; // ID of the current mini-game
   List<String> gameSequence; // Sequence of mini-games for this room
   DateTime roundStartTime; // Time when the current round started
-  List<int> delays;
 
   Room({
     required this.id,
@@ -20,7 +19,6 @@ class Room {
     this.totalRounds = 3,
     this.currentMiniGame = "",
     this.gameSequence = const [],
-    this.delays = const [],
   });
 
   Room.fromJson(Map<String, dynamic> json)
@@ -31,8 +29,7 @@ class Room {
         totalRounds = json['totalRounds'] ?? 3,
         currentMiniGame = json['currentMiniGame'] ?? "",
         gameSequence = List<String>.from(json['gameSequence'] ?? []),
-        roundStartTime = json['roundStartTime'].toDate(),
-        delays = List<int>.from(json['delays'] ?? []);
+        roundStartTime = json['roundStartTime'].toDate();
 
   Map<String, dynamic> toJson() {
     return {
@@ -44,7 +41,6 @@ class Room {
       'currentMiniGame': currentMiniGame,
       'gameSequence': gameSequence,
       'roundStartTime': roundStartTime,
-      'delays': delays,
     };
   }
 }

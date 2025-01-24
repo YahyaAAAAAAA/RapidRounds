@@ -1,7 +1,8 @@
+import 'package:rapid_rounds/features/games/game.dart';
 import 'package:rapid_rounds/features/room/domain/entities/room_with_players.dart';
 
 abstract class RoomRepo {
-  Future<String> createRoom(String deviceId);
+  Future<String> createRoom(String deviceId, List<Game> games);
 
   Future<bool> joinRoom(String roomId, String deviceId);
 
