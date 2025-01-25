@@ -94,6 +94,10 @@ class _RoomPageState extends State<RoomPage> {
             return Center(child: Text(state.message));
           }
 
+          if (state is RoundDone) {
+            return SizedBox();
+          }
+
           return const Center(child: Text('Unexpected state'));
         },
         listener: (context, state) async {
@@ -284,7 +288,7 @@ class _RoomPageState extends State<RoomPage> {
               return ListTile(
                 leading: Text('#${index + 1}'),
                 title: Text(player.name),
-                trailing: Text('${player.points} points'),
+                // trailing: Text('${player.points} points'),
               );
             },
           ),
@@ -295,10 +299,6 @@ class _RoomPageState extends State<RoomPage> {
         ),
       ],
     );
-  }
-
-  void _nextRound() {
-    roomCubit.nextRound(widget.roomId);
   }
 }
 

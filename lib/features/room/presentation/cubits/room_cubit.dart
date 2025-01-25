@@ -15,13 +15,14 @@ class RoomCubit extends Cubit<RoomStates> {
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
   final String deviceId = const Uuid().v4();
 
-  StreamSubscription? _roomSubscription;
+  StreamSubscription? roomSubscription;
 
   RoomCubit({required this.roomRepo}) : super(RoomInitial());
 
-  Future<String> createRoom() async {
+  Future<String> createRoom(String playerName) async {
     try {
-      final roomId = await roomRepo.createRoom(deviceId, generateGames());
+      final roomId =
+          await roomRepo.createRoom(deviceId, playerName, generateGames());
       emit(RoomCreated(roomId));
       return roomId;
     } catch (e) {
@@ -31,18 +32,19 @@ class RoomCubit extends Cubit<RoomStates> {
   }
 
   List<Game> generateGames() {
-    // final random = Random();
     final games = <Game>[];
 
-    for (int i = 0; i < 30; i++) {
-      // final gameType = random.nextInt(3);
+    for (int i = 0; i < 3; i++) {
+      // final gameType = Random().nextInt(3);
       final gameType = 0;
 
+      //todo comeback
       switch (gameType) {
         case 0:
           games.add(
             ReactionButton(
               id: i.toString(),
+              //? not sure yet, either i or random
               roomId: 'temp',
               type: 'ReactionButton',
               delay: Random().nextInt(4000000) + 2000000,
@@ -55,9 +57,9 @@ class RoomCubit extends Cubit<RoomStates> {
     return games;
   }
 
-  Future<bool> joinRoom(String roomId) async {
+  Future<bool> joinRoom(String roomId, String playerName) async {
     try {
-      final isJoined = await roomRepo.joinRoom(roomId, deviceId);
+      final isJoined = await roomRepo.joinRoom(roomId, deviceId, playerName);
       if (!isJoined) {
         emit(RoomError('Room not found'));
         return false;
@@ -82,7 +84,7 @@ class RoomCubit extends Cubit<RoomStates> {
   Future<void> listenToRoom(String roomId) async {
     emit(RoomLoading());
 
-    _roomSubscription = roomRepo.listen(roomId).listen(
+    roomSubscription = roomRepo.listen(roomId).listen(
       (roomWithPlayers) async {
         if (roomWithPlayers.room.state == RoomState.waiting) {
           emit(RoomWaiting(roomWithPlayers));
@@ -101,7 +103,14 @@ class RoomCubit extends Cubit<RoomStates> {
         }
       },
       onError: (e) {
-        emit(RoomError('Error syncing room: ${e.toString()}'));
+        //this is temp error , ignore.
+        String toDateMethodError =
+            'NoSuchMethodError: The method \'toDate\' was called on null.';
+        bool shouldIgnore = e.toString().contains(toDateMethodError);
+
+        if (!shouldIgnore) {
+          emit(RoomError('Error syncing room: ${e.toString()}'));
+        }
       },
     );
   }
@@ -136,8 +145,8 @@ class RoomCubit extends Cubit<RoomStates> {
     bool allPlayersDone = await roomRepo.isAllPlayersDone(roomId);
 
     if (allPlayersDone) {
-      emit(RoundDone());
       await roomRepo.resetPlayerState(roomId);
+      emit(RoundDone());
     }
   }
 
@@ -186,7 +195,7 @@ class RoomCubit extends Cubit<RoomStates> {
 
   @override
   Future<void> close() {
-    _roomSubscription?.cancel();
+    roomSubscription?.cancel();
     return super.close();
   }
 }

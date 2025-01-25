@@ -4,18 +4,31 @@ import 'package:rapid_rounds/features/room/presentation/cubits/room_cubit.dart';
 import 'room_page.dart';
 
 class JoinRoomPage extends StatefulWidget {
-  const JoinRoomPage({super.key});
+  final String playerName;
+
+  const JoinRoomPage({
+    super.key,
+    required this.playerName,
+  });
 
   @override
   State<JoinRoomPage> createState() => _JoinRoomPageState();
 }
 
 class _JoinRoomPageState extends State<JoinRoomPage> {
-  final TextEditingController _roomCodeController = TextEditingController();
+  late final RoomCubit roomCubit;
+  final TextEditingController roomCodeController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+
+    roomCubit = context.read<RoomCubit>();
+  }
 
   @override
   void dispose() {
-    _roomCodeController.dispose();
+    roomCodeController.dispose();
     super.dispose();
   }
 
@@ -44,32 +57,18 @@ class _JoinRoomPageState extends State<JoinRoomPage> {
     );
   }
 
-  int time = DateTime.now().second;
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Join Room'),
-        actions: [
-          TextButton(
-            onPressed: () {
-              setState(() {
-                time = DateTime.now().second;
-              });
-            },
-            child: Text(
-              time.toString(),
-            ),
-          ),
-        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
             TextField(
-              controller: _roomCodeController,
+              controller: roomCodeController,
               decoration: const InputDecoration(
                 labelText: 'Room Code',
               ),
@@ -77,9 +76,9 @@ class _JoinRoomPageState extends State<JoinRoomPage> {
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () async {
-                final roomId = _roomCodeController.text.trim();
+                final roomId = roomCodeController.text.trim();
                 final success =
-                    await context.read<RoomCubit>().joinRoom(roomId);
+                    await roomCubit.joinRoom(roomId, widget.playerName);
 
                 if (!mounted) return;
 

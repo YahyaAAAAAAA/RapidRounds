@@ -13,11 +13,9 @@ class FirebaseRoomRepo implements RoomRepo {
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
 
   @override
-  Future<String> createRoom(String deviceId, List<Game> games) async {
+  Future<String> createRoom(
+      String deviceId, String playerName, List<Game> games) async {
     final roomId = const Uuid().v4().substring(0, 6).toUpperCase();
-
-    // Generate a randomized sequence of mini-games
-    final shuffledGames = ['game1', 'game2', 'game3']..shuffle();
 
     //add room
     await firestore.collection('rooms').doc(roomId).set({
@@ -25,9 +23,6 @@ class FirebaseRoomRepo implements RoomRepo {
       'creator': deviceId,
       'state': RoomState.waiting.name,
       'currentRound': 0,
-      'totalRounds': 3,
-      'currentMiniGame': '',
-      'gameSequence': shuffledGames,
       'roundStartTime': FieldValue.serverTimestamp(),
     });
 
@@ -39,7 +34,7 @@ class FirebaseRoomRepo implements RoomRepo {
         .doc(deviceId)
         .set({
       'id': deviceId,
-      'name': 'playerName 1',
+      'name': playerName,
       'points': 0,
       'state': PlayerState.playing.name,
       'finishTimes': <int>[],
@@ -135,7 +130,8 @@ class FirebaseRoomRepo implements RoomRepo {
   }
 
   @override
-  Future<bool> joinRoom(String roomId, String deviceId) async {
+  Future<bool> joinRoom(
+      String roomId, String deviceId, String playerName) async {
     final docRef = firestore.collection('rooms').doc(roomId);
     final doc = await docRef.get();
 
@@ -146,7 +142,7 @@ class FirebaseRoomRepo implements RoomRepo {
     // Create the new player object with initialized points
     final newPlayer = {
       'id': deviceId,
-      'name': 'playerName', //todo
+      'name': playerName,
       'points': 0,
       'state': PlayerState.playing.name,
       'finishTimes': <int>[],
@@ -212,18 +208,9 @@ class FirebaseRoomRepo implements RoomRepo {
       throw Exception('Room does not exist.');
     }
 
-    final data = doc.data()!;
-    final gameSequence = List<String>.from(data['gameSequence'] ?? []);
-
-    if (gameSequence.isEmpty) {
-      throw Exception('Game sequence is not defined.');
-    }
-
     await roomRef.update({
       'state': RoomState.started.name,
       'currentRound': 1,
-      'roundState': 'InProgress',
-      'currentMiniGame': gameSequence.first,
       'roundStartTime': FieldValue.serverTimestamp(),
     });
   }
@@ -252,30 +239,43 @@ class FirebaseRoomRepo implements RoomRepo {
   Future<void> nextRound(String roomId) async {
     final roomRef = firestore.collection('rooms').doc(roomId);
 
+    //games docs length
+    final gamesDocs = await firestore
+        .collection('rooms')
+        .doc(roomId)
+        .collection('games')
+        .get();
+
+    final gamesCount = gamesDocs.docs.length;
+
     final doc = await roomRef.get();
     if (!doc.exists) {
       throw Exception('Room does not exist.');
     }
 
-    final data = doc.data()!;
-    final currentRound = data['currentRound'] ?? 0;
-    final totalRounds = data['totalRounds'] ?? 3;
-    final gameSequence = List<String>.from(data['gameSequence'] ?? []);
+    final data = doc.data();
 
-    if (currentRound >= totalRounds) {
-      // End the game
+    if (data == null) {
+      throw Exception('Room data does not exist.');
+    }
+
+    final currentRound = data['currentRound'] ?? 0;
+    if (currentRound >= gamesCount) {
+      //end the game
       await roomRef.update({
         'state': RoomState.finished.name,
       });
+
+      return;
     } else {
-      // Move to the next round
+      //3 seconds waiting time
       await roomRef.update({
         'state': RoomState.betweenRounds.name,
         'currentRound': currentRound + 1,
-        'currentMiniGame': gameSequence[currentRound],
       });
     }
 
+    //move to the next round
     await Future.delayed(
       Duration(seconds: 3),
       () async {
@@ -322,7 +322,7 @@ class FirebaseRoomRepo implements RoomRepo {
   Future<void> onPlayerComplete(
     String roomId,
     String playerId,
-    int? gameDelayMicroSeconds,
+    int? delay,
     bool? didFail,
   ) async {
     final roomRef = FirebaseFirestore.instance.collection('rooms').doc(roomId);
@@ -387,14 +387,13 @@ class FirebaseRoomRepo implements RoomRepo {
     // ignore: avoid_print
     print('Elapsed Server Delay Microseconds $elapsedDelayMicroSeconds');
     // ignore: avoid_print
-    print('Elapsed Delay Microseconds $gameDelayMicroSeconds');
+    print('Elapsed Delay Microseconds $delay');
 
     // Append the elapsedSeconds to the finishTime list
     final List<int> finishTimes =
         List<int>.from(updatedPlayerData['finishTimes'] ?? []);
-    finishTimes.add(elapsedMicroSeconds -
-        elapsedDelayMicroSeconds -
-        (gameDelayMicroSeconds ?? 0));
+    finishTimes
+        .add(elapsedMicroSeconds - elapsedDelayMicroSeconds - (delay ?? 0));
 
     //add to fails
     final List<bool> fails = List<bool>.from(updatedPlayerData['fails'] ?? []);
@@ -408,7 +407,7 @@ class FirebaseRoomRepo implements RoomRepo {
     });
   }
 
-  //is all players done
+  // is all players done
   @override
   Future<bool> isAllPlayersDone(String roomId) async {
     final playersDoc = await firestore
@@ -424,7 +423,7 @@ class FirebaseRoomRepo implements RoomRepo {
     });
   }
 
-  //reset all players state to playing
+  // reset all players state to playing
   @override
   Future<void> resetPlayerState(String roomId) async {
     final playersDoc = await firestore

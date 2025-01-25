@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:math';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class ColorMatchWidget extends StatefulWidget {
@@ -11,21 +12,24 @@ class ColorMatchWidget extends StatefulWidget {
 
 class _ColorMatchWidgetState extends State<ColorMatchWidget> {
   static const int gridSize = 4;
-  static const Duration revealDuration = Duration(seconds: 3);
-
   late List<Color> initialColors;
   late List<Color> currentGridColors;
   late List<Color> paletteColors;
+  //TODO DO THE GAME
+  //
+  bool hasAnswered = false;
+  bool didFail = false;
   bool isHidden = false;
+  int delay = 3000000;
   Color? selectedColor;
 
   @override
   void initState() {
     super.initState();
-    _initializeGame();
+    initializeGame();
 
-    // Hide the grid colors after the reveal duration
-    Future.delayed(revealDuration, () {
+    //hide the grid colors after the reveal duration
+    Future.delayed(Duration(microseconds: delay), () {
       setState(() {
         isHidden = true;
         currentGridColors = List.generate(
@@ -36,28 +40,66 @@ class _ColorMatchWidgetState extends State<ColorMatchWidget> {
     });
   }
 
-  void _initializeGame() {
+  void initializeGame() {
     final random = Random();
 
-    initialColors = List.generate(
-      gridSize * gridSize,
-      (_) => Color.fromARGB(
-        255,
-        random.nextInt(256),
-        random.nextInt(256),
-        random.nextInt(256),
-      ),
-    );
+    initialColors = generateRandomCommonColors(count: gridSize * gridSize);
 
     currentGridColors = List.from(initialColors);
     paletteColors = List.from(initialColors)..shuffle(random);
   }
 
-  void _recolorGrid(int index) {
+  List<Color> generateRandomCommonColors({int count = 5}) {
+    List<Color> commonColors = [
+      Colors.red,
+      // Colors.blue,
+      // Colors.green,
+      Colors.yellow,
+      // Colors.orange,
+      //
+      // Colors.purple,
+      // Colors.pink,
+      // Colors.brown,
+      // Colors.black,
+      // Colors.white,
+      // Colors.grey,
+      // Colors.cyan,
+      // Colors.teal,
+      // Colors.indigo,
+      // Colors.lime,
+      // Colors.amber,
+      // Colors.deepOrange,
+      // Colors.deepPurple,
+      // Colors.lightBlue,
+      // Colors.lightGreen,
+    ];
+
+    Random random = Random();
+    List<Color> randomColors = [];
+    Set<int> usedIndices = {}; // To track used indices and avoid duplicates
+
+    while (randomColors.length < count) {
+      int randomIndex = random.nextInt(commonColors.length);
+
+      usedIndices.add(randomIndex);
+      randomColors.add(commonColors[randomIndex]);
+    }
+
+    return randomColors;
+  }
+
+  void onAnswer(int index) {
+    if (hasAnswered) return;
+
     if (selectedColor != null) {
       setState(() {
         currentGridColors[index] = selectedColor!;
       });
+    }
+
+    if (listEquals(currentGridColors, initialColors)) {
+      hasAnswered = true;
+      didFail = false;
     }
   }
 
@@ -69,8 +111,9 @@ class _ColorMatchWidgetState extends State<ColorMatchWidget> {
       ),
       body: Column(
         children: [
-          Expanded(
-            flex: 2,
+          SizedBox(
+            width: 500,
+            height: 500,
             child: GridView.builder(
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: gridSize,
@@ -78,7 +121,7 @@ class _ColorMatchWidgetState extends State<ColorMatchWidget> {
               itemCount: gridSize * gridSize,
               itemBuilder: (context, index) {
                 return GestureDetector(
-                  onTap: isHidden ? () => _recolorGrid(index) : null,
+                  onTap: isHidden ? () => onAnswer(index) : null,
                   child: Container(
                     margin: EdgeInsets.all(4),
                     color: currentGridColors[index],
