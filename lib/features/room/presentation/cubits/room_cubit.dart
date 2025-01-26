@@ -1,9 +1,12 @@
 import 'dart:async';
 import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rapid_rounds/config/enums/room_state.dart';
+import 'package:rapid_rounds/config/extensions/color_extensions.dart';
 import 'package:rapid_rounds/features/games/game.dart';
+import 'package:rapid_rounds/features/games/match%20color/color_match.dart';
 import 'package:rapid_rounds/features/games/reaction%20button/reaction_button.dart';
 import 'package:rapid_rounds/features/room/domain/entities/player.dart';
 import 'package:rapid_rounds/features/room/domain/room_repo.dart';
@@ -48,6 +51,19 @@ class RoomCubit extends Cubit<RoomStates> {
               roomId: 'temp',
               type: 'ReactionButton',
               delay: Random().nextInt(4000000) + 2000000,
+            ),
+          );
+          break;
+        case 1:
+          games.add(
+            ColorMatch(
+              id: i.toString(),
+              roomId: 'temp',
+              type: 'ColorMatch',
+              gridSize: 4 * 4,
+              colors: generateColors(4).map((color) => color.toInt()).toList(),
+              palleteColors:
+                  commonColors.map((color) => color.toInt()).toList(),
             ),
           );
           break;
@@ -197,5 +213,41 @@ class RoomCubit extends Cubit<RoomStates> {
   Future<void> close() {
     roomSubscription?.cancel();
     return super.close();
+  }
+
+  //---color match---
+  List<Color> commonColors = [
+    Colors.red,
+    // Colors.blue,
+    // Colors.green,
+    Colors.yellow,
+    // Colors.orange,
+    // Colors.purple,
+    // Colors.pink,
+    // Colors.brown,
+    // Colors.black,
+    // Colors.white,
+    // Colors.grey,
+    // Colors.cyan,
+    // Colors.teal,
+    // Colors.indigo,
+    // Colors.lime,
+    // Colors.amber,
+    // Colors.deepOrange,
+    // Colors.deepPurple,
+    // Colors.lightBlue,
+    // Colors.lightGreen,
+  ];
+
+  List<Color> generateColors(int count) {
+    List<Color> randomColors = [];
+
+    while (randomColors.length < count) {
+      int randomIndex = Random().nextInt(commonColors.length);
+
+      randomColors.add(commonColors[randomIndex]);
+    }
+
+    return randomColors;
   }
 }

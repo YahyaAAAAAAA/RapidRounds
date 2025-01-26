@@ -2,6 +2,9 @@ import 'dart:async';
 import 'dart:math';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:rapid_rounds/config/base_inkwell.dart';
+import 'package:rapid_rounds/config/shadows.dart';
+import 'package:rapid_rounds/features/games/match%20color/patterns.dart';
 
 class ColorMatchWidget extends StatefulWidget {
   const ColorMatchWidget({super.key});
@@ -10,18 +13,23 @@ class ColorMatchWidget extends StatefulWidget {
   State<ColorMatchWidget> createState() => _ColorMatchWidgetState();
 }
 
+//note for now size is 4 (fixed), but when not the rememberTime and solveTime should adapt.
 class _ColorMatchWidgetState extends State<ColorMatchWidget> {
   static const int gridSize = 4;
   late List<Color> initialColors;
   late List<Color> currentGridColors;
   late List<Color> paletteColors;
-  //TODO DO THE GAME
+
   //
   bool hasAnswered = false;
   bool didFail = false;
   bool isHidden = false;
-  int delay = 3000000;
   Color? selectedColor;
+
+  //the time before the game starts
+  int rememberTime = 3000000; //db
+  //the time before the game ends
+  int solveTime = 3000000; //db
 
   @override
   void initState() {
@@ -29,63 +37,54 @@ class _ColorMatchWidgetState extends State<ColorMatchWidget> {
     initializeGame();
 
     //hide the grid colors after the reveal duration
-    Future.delayed(Duration(microseconds: delay), () {
+    Future.delayed(Duration(microseconds: rememberTime), () {
+      if (!mounted) {
+        return;
+      }
       setState(() {
         isHidden = true;
         currentGridColors = List.generate(
           gridSize * gridSize,
-          (_) => Colors.white,
+          (_) => Colors.grey.shade200,
         );
       });
     });
   }
 
   void initializeGame() {
-    final random = Random();
-
-    initialColors = generateRandomCommonColors(count: gridSize * gridSize);
+    initialColors = generateRandomCommonColors(gridSize * gridSize);
 
     currentGridColors = List.from(initialColors);
-    paletteColors = List.from(initialColors)..shuffle(random);
+    paletteColors = commonColors;
   }
 
-  List<Color> generateRandomCommonColors({int count = 5}) {
-    List<Color> commonColors = [
-      Colors.red,
-      // Colors.blue,
-      // Colors.green,
-      Colors.yellow,
-      // Colors.orange,
-      //
-      // Colors.purple,
-      // Colors.pink,
-      // Colors.brown,
-      // Colors.black,
-      // Colors.white,
-      // Colors.grey,
-      // Colors.cyan,
-      // Colors.teal,
-      // Colors.indigo,
-      // Colors.lime,
-      // Colors.amber,
-      // Colors.deepOrange,
-      // Colors.deepPurple,
-      // Colors.lightBlue,
-      // Colors.lightGreen,
-    ];
+  List<Color> commonColors = [
+    Colors.red,
+    Colors.blue,
+    Colors.green,
+    // Colors.yellow,
+    // Colors.orange,
+    // Colors.purple,
+    // Colors.pink,
+    // Colors.brown,
+    // Colors.black,
+    // Colors.white,
+    // Colors.grey,
+    // Colors.cyan,
+    // Colors.teal,
+    // Colors.indigo,
+    // Colors.lime,
+    // Colors.amber,
+    // Colors.deepOrange,
+    // Colors.deepPurple,
+    // Colors.lightBlue,
+    // Colors.lightGreen,
+  ];
 
-    Random random = Random();
-    List<Color> randomColors = [];
-    Set<int> usedIndices = {}; // To track used indices and avoid duplicates
+  List<Color> generateRandomCommonColors(int count) {
+    int randomIndex = Random().nextInt(Patterns.patterns.length);
 
-    while (randomColors.length < count) {
-      int randomIndex = random.nextInt(commonColors.length);
-
-      usedIndices.add(randomIndex);
-      randomColors.add(commonColors[randomIndex]);
-    }
-
-    return randomColors;
+    return Patterns.patterns[randomIndex];
   }
 
   void onAnswer(int index) {
@@ -100,6 +99,7 @@ class _ColorMatchWidgetState extends State<ColorMatchWidget> {
     if (listEquals(currentGridColors, initialColors)) {
       hasAnswered = true;
       didFail = false;
+      print('won');
     }
   }
 
@@ -109,58 +109,102 @@ class _ColorMatchWidgetState extends State<ColorMatchWidget> {
       appBar: AppBar(
         title: Text('Color Grid Game'),
       ),
-      body: Column(
-        children: [
-          SizedBox(
-            width: 500,
-            height: 500,
-            child: GridView.builder(
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: gridSize,
-              ),
-              itemCount: gridSize * gridSize,
-              itemBuilder: (context, index) {
-                return GestureDetector(
-                  onTap: isHidden ? () => onAnswer(index) : null,
-                  child: Container(
-                    margin: EdgeInsets.all(4),
-                    color: currentGridColors[index],
+      body: Center(
+        child: ConstrainedBox(
+          constraints: BoxConstraints(maxWidth: 450),
+          child: ListView(
+            shrinkWrap: true,
+            padding: EdgeInsets.all(12),
+            children: [
+              Container(
+                padding: EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(20),
+                  boxShadow: Shadows.soft(),
+                ),
+                child: GridView.builder(
+                  shrinkWrap: true,
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: gridSize,
                   ),
-                );
-              },
-            ),
-          ),
-          Expanded(
-            flex: 1,
-            child: ListView.builder(
-              scrollDirection: Axis.horizontal,
-              itemCount: paletteColors.length,
-              itemBuilder: (context, index) {
-                return GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      selectedColor = paletteColors[index];
-                    });
+                  itemCount: gridSize * gridSize,
+                  itemBuilder: (context, index) {
+                    return Padding(
+                      padding: EdgeInsets.all(8),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(20),
+                        child: BaseInkWell(
+                          onTap: isHidden ? () => onAnswer(index) : null,
+                          child: AnimatedContainer(
+                            duration: Duration(milliseconds: 200),
+                            margin: const EdgeInsets.only(bottom: 2),
+                            decoration: BoxDecoration(
+                              color: currentGridColors[index],
+                              borderRadius: BorderRadius.circular(20),
+                              boxShadow: Shadows.soft(),
+                            ),
+                          ),
+                        ),
+                      ),
+                    );
                   },
-                  child: Container(
-                    width: 50,
-                    height: 50,
-                    margin: EdgeInsets.all(4),
-                    decoration: BoxDecoration(
-                      color: paletteColors[index],
-                      border: Border.all(
-                        color: selectedColor == paletteColors[index]
-                            ? Colors.black
-                            : Colors.transparent,
-                        width: 3,
+                ),
+              ),
+              SizedBox(height: 30),
+              Row(
+                children: [
+                  Icon(
+                    Icons.draw_outlined,
+                    color: Colors.black,
+                  )
+                ],
+              ),
+              SizedBox(height: 10),
+              FittedBox(
+                fit: BoxFit.scaleDown,
+                alignment: Alignment.centerLeft,
+                child: Container(
+                  padding: EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    boxShadow: Shadows.soft(),
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: List.generate(
+                      commonColors.length,
+                      (index) => GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            selectedColor = paletteColors[index];
+                          });
+                        },
+                        child: AnimatedContainer(
+                          duration: Duration(milliseconds: 200),
+                          width: 50,
+                          height: 50,
+                          margin: EdgeInsets.all(4),
+                          decoration: BoxDecoration(
+                            color: paletteColors[index],
+                            borderRadius: BorderRadius.circular(50),
+                            border: Border.all(
+                              color: selectedColor == paletteColors[index]
+                                  ? Colors.black
+                                  : Colors.transparent,
+                              width: 3,
+                            ),
+                          ),
+                        ),
                       ),
                     ),
                   ),
-                );
-              },
-            ),
+                ),
+              ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }
