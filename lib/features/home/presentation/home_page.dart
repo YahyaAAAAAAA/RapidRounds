@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:rapid_rounds/config/temp.dart';
+import 'package:rapid_rounds/features/games/match%20color/color_match.dart';
 import 'package:rapid_rounds/features/games/match%20color/color_match_widget.dart';
 import 'package:rapid_rounds/features/room/presentation/pages/create_room_page.dart';
 import 'package:rapid_rounds/features/room/presentation/pages/join_room_page.dart';
@@ -82,7 +84,7 @@ class _HomePageState extends State<HomePage> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (_) => ColorMatchWidget(),
+                    builder: (_) => GlowingBackground(),
                   ),
                 );
               },

@@ -1,23 +1,23 @@
 import 'package:rapid_rounds/features/games/game.dart';
 
 class ColorMatch extends Game {
-  final int gridSize;
-  final List<int> colors;
-  final List<int> palleteColors;
+  final int pattern;
+  //fixed
+  final int gridSize = 4;
+  //the time before the game starts (micro)
+  final int rememberTime = 3000000;
+  //the time before the game ends (micro)
+  final int solveTime = 10000000;
 
   ColorMatch({
     required super.id,
     required super.type,
     required super.roomId,
-    required this.gridSize,
-    required this.colors,
-    required this.palleteColors,
+    required this.pattern,
   });
 
   ColorMatch.fromJson(Map<String, dynamic> json)
-      : gridSize = json['gridSize'],
-        colors = json['colors'],
-        palleteColors = json['palleteColors'],
+      : pattern = json['pattern'],
         super(
           id: json['id'],
           type: json['type'],
@@ -27,9 +27,10 @@ class ColorMatch extends Game {
   @override
   Map<String, dynamic> toJson() {
     return {
-      'gridSize': gridSize,
-      'colors': colors,
-      'palleteColors': palleteColors,
+      'pattern': pattern,
+      'type': super.type,
+      'id': super.id,
+      'roomId': super.roomId,
     };
   }
 }

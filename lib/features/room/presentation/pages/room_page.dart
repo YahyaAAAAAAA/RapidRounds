@@ -4,6 +4,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rapid_rounds/config/enums/player_state.dart';
 import 'package:rapid_rounds/config/extensions/int_extensions.dart';
 import 'package:rapid_rounds/features/games/game.dart';
+import 'package:rapid_rounds/features/games/match%20color/color_match.dart';
+import 'package:rapid_rounds/features/games/match%20color/color_match_widget.dart';
 import 'package:rapid_rounds/features/games/reaction%20button/reaction_button.dart';
 import 'package:rapid_rounds/features/games/reaction%20button/reaction_button_widget.dart';
 import 'package:rapid_rounds/features/room/domain/entities/player.dart';
@@ -228,6 +230,7 @@ class _RoomPageState extends State<RoomPage> {
     );
   }
 
+  //todo comeback
   Widget _buildMiniGame(Room room, List<Game> games) {
     final miniGames = List<Widget>.generate(
       games.length,
@@ -240,6 +243,11 @@ class _RoomPageState extends State<RoomPage> {
                 reactionButton: reactionButton,
                 roomCubit: roomCubit,
               );
+            }
+          case 'ColorMatch':
+            final colorMatch = games[i];
+            if (colorMatch is ColorMatch) {
+              return ColorMatchWidget(colorMatch: colorMatch);
             }
           default:
             return Text('error');
@@ -298,188 +306,6 @@ class _RoomPageState extends State<RoomPage> {
           child: const Text('Exit'),
         ),
       ],
-    );
-  }
-}
-
-class MiniGame1 extends StatefulWidget {
-  final RoomCubit roomCubit;
-  final String roomId;
-  final int delay;
-  final VoidCallback onComplete;
-
-  const MiniGame1({
-    required this.roomCubit,
-    required this.roomId,
-    required this.onComplete,
-    required this.delay,
-    super.key,
-  });
-
-  @override
-  State<MiniGame1> createState() => _MiniGame1State();
-}
-
-class _MiniGame1State extends State<MiniGame1> {
-  Timer? timer;
-  bool hasAnswered = false;
-  bool didFail = false;
-  Color color = Colors.red;
-
-  void onAnswer() async {
-    if (hasAnswered) return;
-
-    //player failed
-    if (color == Colors.red) {
-      didFail = true;
-    }
-
-    setState(() {
-      hasAnswered = true;
-    });
-
-    // await widget.roomCubit
-    //     .updatePlayerScore(widget.roomId, widget.roomCubit.deviceId, 10);
-
-    await widget.roomCubit.onPlayerComplete(
-      widget.roomId,
-      widget.delay,
-      didFail,
-    );
-
-    widget.roomCubit.isAllPlayersDone(widget.roomId);
-  }
-
-  void startGame(int delay) {
-    timer = Timer(Duration(microseconds: delay), () {
-      setState(() {
-        color = Colors.green;
-      });
-    });
-  }
-
-  @override
-  void initState() {
-    startGame(widget.delay);
-
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    timer!.cancel();
-
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return !hasAnswered
-        ? GestureDetector(
-            onTap: () => onAnswer(),
-            child: Container(
-              color: color,
-              child: Center(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(
-                      color == Colors.red ? 'Wait for green' : 'Tap Now!',
-                      style: TextStyle(fontSize: 24, color: Colors.white),
-                      textAlign: TextAlign.center,
-                    ),
-                    SizedBox(height: 20),
-                  ],
-                ),
-              ),
-            ),
-          )
-        : Center(
-            child: Text(
-              'Please Wait for other Players',
-            ),
-          );
-  }
-}
-
-class MiniGame2 extends StatefulWidget {
-  final RoomCubit roomCubit;
-  final String roomId;
-  final VoidCallback onComplete;
-
-  const MiniGame2(
-      {required this.roomCubit,
-      required this.roomId,
-      required this.onComplete,
-      super.key});
-
-  @override
-  State<MiniGame2> createState() => _MiniGame2State();
-}
-
-class _MiniGame2State extends State<MiniGame2> {
-  bool hasAnswered = false;
-
-  void _onAnswer() {
-    if (hasAnswered) return;
-
-    setState(() {
-      hasAnswered = true;
-    });
-
-    widget.roomCubit
-        .updatePlayerScore(widget.roomId, widget.roomCubit.deviceId, 20);
-    widget.onComplete();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: ElevatedButton(
-        onPressed: _onAnswer,
-        child: const Text('Who clicks first wins 20 points!'),
-      ),
-    );
-  }
-}
-
-class MiniGame3 extends StatefulWidget {
-  final RoomCubit roomCubit;
-  final String roomId;
-  final VoidCallback onComplete;
-
-  const MiniGame3(
-      {required this.roomCubit,
-      required this.roomId,
-      required this.onComplete,
-      super.key});
-
-  @override
-  State<MiniGame3> createState() => _MiniGame3State();
-}
-
-class _MiniGame3State extends State<MiniGame3> {
-  bool hasAnswered = false;
-
-  void _onAnswer() {
-    if (hasAnswered) return;
-
-    setState(() {
-      hasAnswered = true;
-    });
-
-    widget.roomCubit
-        .updatePlayerScore(widget.roomId, widget.roomCubit.deviceId, 30);
-    widget.onComplete();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: ElevatedButton(
-        onPressed: _onAnswer,
-        child: const Text('Fastest player gets 30 points!'),
-      ),
     );
   }
 }

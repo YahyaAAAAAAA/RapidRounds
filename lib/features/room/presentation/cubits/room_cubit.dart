@@ -4,9 +4,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rapid_rounds/config/enums/room_state.dart';
-import 'package:rapid_rounds/config/extensions/color_extensions.dart';
 import 'package:rapid_rounds/features/games/game.dart';
 import 'package:rapid_rounds/features/games/match%20color/color_match.dart';
+import 'package:rapid_rounds/features/games/match%20color/patterns.dart';
 import 'package:rapid_rounds/features/games/reaction%20button/reaction_button.dart';
 import 'package:rapid_rounds/features/room/domain/entities/player.dart';
 import 'package:rapid_rounds/features/room/domain/room_repo.dart';
@@ -23,9 +23,12 @@ class RoomCubit extends Cubit<RoomStates> {
   RoomCubit({required this.roomRepo}) : super(RoomInitial());
 
   Future<String> createRoom(String playerName) async {
+    //todo make game count dynamic
+    int count = 5;
+
     try {
       final roomId =
-          await roomRepo.createRoom(deviceId, playerName, generateGames());
+          await roomRepo.createRoom(deviceId, playerName, generateGames(count));
       emit(RoomCreated(roomId));
       return roomId;
     } catch (e) {
@@ -34,12 +37,11 @@ class RoomCubit extends Cubit<RoomStates> {
     }
   }
 
-  List<Game> generateGames() {
+  List<Game> generateGames(int count) {
     final games = <Game>[];
 
-    for (int i = 0; i < 3; i++) {
-      // final gameType = Random().nextInt(3);
-      final gameType = 0;
+    for (int i = 0; i < count; i++) {
+      final gameType = Random().nextInt(2);
 
       //todo comeback
       switch (gameType) {
@@ -60,10 +62,7 @@ class RoomCubit extends Cubit<RoomStates> {
               id: i.toString(),
               roomId: 'temp',
               type: 'ColorMatch',
-              gridSize: 4 * 4,
-              colors: generateColors(4).map((color) => color.toInt()).toList(),
-              palleteColors:
-                  commonColors.map((color) => color.toInt()).toList(),
+              pattern: Random().nextInt(Patterns.patterns.length),
             ),
           );
           break;
@@ -218,25 +217,8 @@ class RoomCubit extends Cubit<RoomStates> {
   //---color match---
   List<Color> commonColors = [
     Colors.red,
-    // Colors.blue,
-    // Colors.green,
-    Colors.yellow,
-    // Colors.orange,
-    // Colors.purple,
-    // Colors.pink,
-    // Colors.brown,
-    // Colors.black,
-    // Colors.white,
-    // Colors.grey,
-    // Colors.cyan,
-    // Colors.teal,
-    // Colors.indigo,
-    // Colors.lime,
-    // Colors.amber,
-    // Colors.deepOrange,
-    // Colors.deepPurple,
-    // Colors.lightBlue,
-    // Colors.lightGreen,
+    Colors.blue,
+    Colors.green,
   ];
 
   List<Color> generateColors(int count) {
