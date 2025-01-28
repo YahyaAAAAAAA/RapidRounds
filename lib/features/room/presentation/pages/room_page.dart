@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:rapid_rounds/config/app_scaffold.dart';
 import 'package:rapid_rounds/config/enums/player_state.dart';
 import 'package:rapid_rounds/config/extensions/int_extensions.dart';
 import 'package:rapid_rounds/features/games/game.dart';
@@ -54,7 +55,7 @@ class _RoomPageState extends State<RoomPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return AppScaffold(
       appBar: AppBar(
         title: const Text('Room'),
         actions: [

@@ -1,7 +1,8 @@
 main:
     ✔ add .env (firebase_option have keys) then make github repo @done(25-01-27 23:28)
     ✔ bring back 3s delay between rounds @done(25-01-27 23:28)
-    ☐ test new games with android emu
+    ✔ test new games with android emu @done(25-01-28 23:52)
+    ☐ add mesh bg to app scaffold
     ☐ check the comebacks
     ☐ fix general ui
     ☐ fix player remove

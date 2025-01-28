@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:rapid_rounds/config/temp.dart';
-import 'package:rapid_rounds/features/games/match%20color/color_match.dart';
-import 'package:rapid_rounds/features/games/match%20color/color_match_widget.dart';
+import 'package:rapid_rounds/config/app_scaffold.dart';
 import 'package:rapid_rounds/features/room/presentation/pages/create_room_page.dart';
 import 'package:rapid_rounds/features/room/presentation/pages/join_room_page.dart';
 
@@ -23,7 +21,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return AppScaffold(
       appBar: AppBar(
         title: const Text('Game App'),
       ),
@@ -81,12 +79,12 @@ class _HomePageState extends State<HomePage> {
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (_) => GlowingBackground(),
-                  ),
-                );
+                // Navigator.push(
+                //   context,
+                //   MaterialPageRoute(
+                //     builder: (_) => GlowingBackground(),
+                //   ),
+                // );
               },
               child: const Text('Test Room'),
             ),

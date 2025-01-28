@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:rapid_rounds/config/app_scaffold.dart';
 import 'package:rapid_rounds/features/room/presentation/cubits/room_cubit.dart';
 import 'room_page.dart';
 
@@ -59,7 +60,7 @@ class _JoinRoomPageState extends State<JoinRoomPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return AppScaffold(
       appBar: AppBar(
         title: const Text('Join Room'),
       ),

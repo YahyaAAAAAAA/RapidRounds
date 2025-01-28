@@ -34,8 +34,15 @@ class MyApp extends StatelessWidget {
           create: (context) => RoomCubit(roomRepo: roomRepo),
         ),
       ],
-      child: const MaterialApp(
+      child: MaterialApp(
         debugShowCheckedModeBanner: false,
+        theme: ThemeData(
+          fontFamily: 'Abel',
+          scaffoldBackgroundColor: Color(0xFFf5f4ed),
+          appBarTheme: AppBarTheme(
+            backgroundColor: Colors.transparent,
+          ),
+        ),
         home: HomePage(),
       ),
     );

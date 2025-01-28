@@ -69,7 +69,9 @@ class _ColorMatchWidgetState extends State<ColorMatchWidget> {
 
   @override
   void dispose() {
-    timer!.cancel();
+    if (timer != null) {
+      timer?.cancel();
+    }
 
     super.dispose();
   }
@@ -82,7 +84,7 @@ class _ColorMatchWidgetState extends State<ColorMatchWidget> {
         solveTime--;
       });
 
-      if (solveTime == 0) {
+      if (solveTime == 0 && hasAnswered == false) {
         timer.cancel();
         hasAnswered = true;
         didFail = true;
