@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rapid_rounds/config/base_inkwell.dart';
+import 'package:rapid_rounds/config/constants.dart';
 import 'package:rapid_rounds/config/shadows.dart';
 import 'package:rapid_rounds/features/games/match%20color/color_match.dart';
 import 'package:rapid_rounds/features/games/match%20color/patterns.dart';
@@ -126,7 +127,7 @@ class _ColorMatchWidgetState extends State<ColorMatchWidget> {
   Widget build(BuildContext context) {
     return Center(
       child: ConstrainedBox(
-        constraints: BoxConstraints(maxWidth: 450),
+        constraints: BoxConstraints(maxWidth: Constants.listViewWidth),
         child: ListView(
           shrinkWrap: true,
           padding: EdgeInsets.all(12),

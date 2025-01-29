@@ -21,6 +21,8 @@ dependencies:
   rxdart: ^0.27.0
   flutter_dotenv: ^5.2.1
   lazy_load_indexed_stack: ^1.1.0
+  mesh_gradient: ^1.3.8
+  cached_network_image: ^3.4.1
 
 dev_dependencies:
   flutter_test:
@@ -36,6 +38,8 @@ flutter:
   assets:
     - .env
     - assets/images/
+    - assets/images/x.png
+    - assets/fonts/
 
 
   # An image asset can refer to one or more resolution-specific "variants", see
@@ -49,10 +53,13 @@ flutter:
   # "family" key with the font family name, and a "fonts" key with a
   # list giving the asset and other descriptors for the font. For
   # example:
-  # fonts:
-  #   - family: Schyler
-  #     fonts:
-  #       - asset: fonts/Schyler-Regular.ttf
+  fonts:
+    - family: Barr
+      fonts:
+        - asset: assets/fonts/Barriecito-Regular.ttf
+    - family: Abel
+      fonts:
+        - asset: assets/fonts/Abel-Regular.ttf
   #       - asset: fonts/Schyler-Italic.ttf
   #         style: italic
   #   - family: Trajan Pro

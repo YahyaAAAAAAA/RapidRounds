@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:rapid_rounds/config/app_scaffold.dart';
+import 'package:rapid_rounds/config/constants.dart';
+import 'package:rapid_rounds/config/global_colors.dart';
+import 'package:rapid_rounds/features/home/presentation/components/home_button.dart';
+import 'package:rapid_rounds/features/home/presentation/components/name_container.dart';
 import 'package:rapid_rounds/features/room/presentation/pages/create_room_page.dart';
 import 'package:rapid_rounds/features/room/presentation/pages/join_room_page.dart';
 
@@ -22,73 +26,91 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return AppScaffold(
-      appBar: AppBar(
-        title: const Text('Game App'),
-      ),
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 50),
-              child: TextField(
-                controller: nameController,
-                decoration: InputDecoration(
-                  hintText: 'Enter Your Name',
+        child: ConstrainedBox(
+          constraints: BoxConstraints(
+            maxWidth: Constants.listViewWidth,
+          ),
+          child: ListView(
+            shrinkWrap: true,
+            children: [
+              FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 8),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        'Rapid Rounds',
+                        style: TextStyle(
+                          fontFamily: 'Barr',
+                          fontSize: 60,
+                          color: GColors.black,
+                        ),
+                      ),
+                      Icon(
+                        Icons.bolt_rounded,
+                        color: GColors.sunGlow,
+                        size: 80,
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                if (nameController.text.isEmpty) {
-                  //todo add snack bar or validate ?
-                  return;
-                }
+              SizedBox(height: 20),
+              NameContainer(nameController: nameController),
+              SizedBox(height: 20),
+              HomeButton(
+                icon: Icons.create_rounded,
+                text: 'Create Room',
+                backgroundColor: GColors.sunGlow,
+                textColor: GColors.black,
+                fontWeight: FontWeight.bold,
+                onPressed: () {
+                  if (nameController.text.trim().isEmpty) {
+                    //todo add snack bar or validate ?
+                    return;
+                  }
 
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (_) => CreateRoomPage(
-                      playerName: nameController.text,
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => CreateRoomPage(
+                        playerName: nameController.text,
+                      ),
                     ),
-                  ),
-                );
-              },
-              child: const Text('Create Room'),
-            ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () {
-                if (nameController.text.isEmpty) {
-                  //todo add snack bar or validate ?
-                  return;
-                }
+                  );
+                },
+              ),
+              SizedBox(height: 20),
+              HomeButton(
+                icon: Icons.meeting_room_outlined,
+                text: 'join Room    ',
+                onPressed: () {
+                  if (nameController.text.trim().isEmpty) {
+                    //todo add snack bar or validate ?
+                    return;
+                  }
 
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (_) => JoinRoomPage(
-                      playerName: nameController.text,
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => JoinRoomPage(
+                        playerName: nameController.text,
+                      ),
                     ),
-                  ),
-                );
-              },
-              child: const Text('Join Room'),
-            ),
-            //todo testing
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () {
-                // Navigator.push(
-                //   context,
-                //   MaterialPageRoute(
-                //     builder: (_) => GlowingBackground(),
-                //   ),
-                // );
-              },
-              child: const Text('Test Room'),
-            ),
-          ],
+                  );
+                },
+              ),
+              SizedBox(height: 20),
+              HomeButton(
+                icon: Icons.info_outline_rounded,
+                text: 'Test Room   ',
+                onPressed: () => Navigator.of(context).pop(),
+              ),
+            ],
+          ),
         ),
       ),
     );
