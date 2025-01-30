@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mesh_gradient/mesh_gradient.dart';
-import 'package:rapid_rounds/config/global_colors.dart';
+import 'package:rapid_rounds/config/utils/global_colors.dart';
 
 class AppScaffold extends StatelessWidget {
   final Widget body;

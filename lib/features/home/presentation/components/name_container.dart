@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:rapid_rounds/config/global_colors.dart';
+import 'package:rapid_rounds/config/utils/constants.dart';
+import 'package:rapid_rounds/config/utils/custom_icons.dart';
+import 'package:rapid_rounds/config/utils/global_colors.dart';
+import 'package:rapid_rounds/config/utils/shadows.dart';
+import 'package:rapid_rounds/features/home/presentation/components/home_button.dart';
 
 class NameContainer extends StatelessWidget {
   const NameContainer({
@@ -11,44 +15,73 @@ class NameContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Row(
-        children: [
-          Expanded(
-            child: TextField(
-              controller: nameController,
-              style: TextStyle(
-                color: GColors.white,
-              ),
-              decoration: InputDecoration(
-                hintText: 'Enter Name',
-                //note: hides maxLength counter
-                counterText: "",
-
-                hintStyle: TextStyle(
-                  color: GColors.white,
-                  fontSize: 17,
-                ),
-                fillColor: GColors.black,
-                filled: true,
-                enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(
-                    color: GColors.black,
-                  ),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(
-                    color: GColors.white,
-                    width: 2,
-                  ),
-                  borderRadius: BorderRadius.circular(12),
-                ),
+    return FittedBox(
+      fit: BoxFit.scaleDown,
+      child: Container(
+        padding: const EdgeInsets.only(
+          left: 12,
+          right: 12,
+          top: 20,
+        ),
+        width: 300,
+        height: 250,
+        decoration: BoxDecoration(
+          color: GColors.gray,
+          borderRadius: BorderRadius.circular(Constants.outterRadius),
+          boxShadow: Shadows.elevation(),
+        ),
+        child: Stack(
+          children: [
+            Positioned(
+              right: -23,
+              bottom: -30,
+              //todo cached image
+              child: Image.asset(
+                'assets/images/mon3.png',
+                width: 200,
+                height: 250,
+                fit: BoxFit.contain,
               ),
             ),
-          ),
-        ],
+            // Text
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  '• Enter Name',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                    fontFamily: 'Barr',
+                  ),
+                ),
+                SizedBox(height: 20),
+                SizedBox(
+                  width: 100,
+                  child: TextField(
+                    decoration: InputDecoration(
+                      hintText: 'Player-882',
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            Positioned(
+              bottom: 16,
+              left: 0,
+              right: 0,
+              child: HomeButton(
+                onPressed: () {
+                  // Handle button tap
+                },
+                icon: Custom.user_moustache,
+                backgroundColor: GColors.black,
+                text: 'Choose Avatar',
+              ),
+            )
+          ],
+        ),
       ),
     );
   }

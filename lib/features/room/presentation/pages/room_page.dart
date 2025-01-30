@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:rapid_rounds/config/app_scaffold.dart';
+import 'package:rapid_rounds/config/utils/app_scaffold.dart';
 import 'package:rapid_rounds/config/enums/player_state.dart';
 import 'package:rapid_rounds/config/extensions/int_extensions.dart';
 import 'package:rapid_rounds/features/games/game.dart';

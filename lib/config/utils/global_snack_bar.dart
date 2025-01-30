@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:rapid_rounds/config/global_colors.dart';
+import 'package:rapid_rounds/config/utils/global_colors.dart';
 
 //global snackbar, shows error message
 class GSnackBar {
