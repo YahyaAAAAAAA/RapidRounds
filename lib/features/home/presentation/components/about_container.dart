@@ -23,8 +23,8 @@ class AboutContainer extends StatelessWidget {
         child: Stack(
           children: [
             Positioned(
-              bottom: -42,
-              left: -0,
+              bottom: -25,
+              left: -5,
               //todo cached image
               child: Transform(
                 alignment: Alignment.center,
@@ -33,7 +33,7 @@ class AboutContainer extends StatelessWidget {
                 child: Image.asset(
                   'assets/images/mon2.png',
                   width: 200,
-                  height: 150,
+                  height: 120,
                   fit: BoxFit.contain,
                 ),
               ),
@@ -43,10 +43,10 @@ class AboutContainer extends StatelessWidget {
               child: Text(
                 '• How To Play',
                 style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black,
-                ),
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                    fontFamily: 'Barr'),
               ),
             ),
             Align(

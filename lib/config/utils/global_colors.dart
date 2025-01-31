@@ -4,7 +4,7 @@ import 'package:mesh_gradient/mesh_gradient.dart';
 class GColors {
   static Color springWood = Color(0xFFf5f4ed);
   static Color sunGlow = Color(0xFFffc62f);
-  static Color black = Colors.black;
+  static Color black = const Color(0xFF1A1110);
   static Color white = Colors.white;
   static Color gray = Color(0xFFeae7da);
   static Color transparent = Colors.transparent;

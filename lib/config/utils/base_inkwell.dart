@@ -4,7 +4,14 @@ import 'package:flutter/material.dart';
 class BaseInkWell extends StatelessWidget {
   final Widget child;
   final Function()? onTap;
-  const BaseInkWell({super.key, required this.child, this.onTap});
+  final BorderRadius? borderRadius;
+
+  const BaseInkWell({
+    super.key,
+    required this.child,
+    this.onTap,
+    this.borderRadius,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -18,10 +25,10 @@ class BaseInkWell extends StatelessWidget {
           bottom: 0,
           child: Material(
             color: Colors.transparent,
-            borderRadius: BorderRadius.circular(20),
+            borderRadius: borderRadius ?? BorderRadius.circular(20),
             child: InkWell(
               onTap: onTap,
-              borderRadius: BorderRadius.circular(20),
+              borderRadius: borderRadius ?? BorderRadius.circular(20),
               child: SizedBox(
                 width: MediaQuery.of(context).size.width,
                 height: MediaQuery.of(context).size.height,

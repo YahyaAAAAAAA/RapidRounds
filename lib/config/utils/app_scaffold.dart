@@ -5,7 +5,7 @@ import 'package:rapid_rounds/config/utils/global_colors.dart';
 class AppScaffold extends StatelessWidget {
   final Widget body;
   final Widget? bottomNavigationBar;
-  final AppBar? appBar;
+  final PreferredSizeWidget? appBar;
   final FloatingActionButton? floatingActionButton;
   final Color? backgroundColor;
   final String backgroundImage;

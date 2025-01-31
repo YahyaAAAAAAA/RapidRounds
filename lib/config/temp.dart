@@ -4,7 +4,7 @@ class TopographicPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color = Colors.grey.withOpacity(0.1) // Adjust the opacity
+      ..color = Colors.grey.withValues(alpha: 0.1) // Adjust the opacity
       ..style = PaintingStyle.stroke
       ..strokeWidth = 2.0;
 
@@ -23,7 +23,6 @@ class TopographicPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) {
-    // TODO: implement shouldRepaint
     throw UnimplementedError();
   }
 }

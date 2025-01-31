@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:rapid_rounds/config/utils/constants.dart';
+import 'package:neopop/neopop.dart';
 import 'package:rapid_rounds/config/utils/global_colors.dart';
 
 class HomeButton extends StatelessWidget {
@@ -22,35 +22,29 @@ class HomeButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ElevatedButton(
-      onPressed: onPressed,
-      style: ElevatedButton.styleFrom(
-        backgroundColor: backgroundColor ?? GColors.black,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(Constants.innerRadius),
-        ),
-        padding: const EdgeInsets.symmetric(vertical: 16),
-        elevation: 0,
-        overlayColor: GColors.white.withValues(alpha: 0.1),
-        shadowColor: GColors.transparent,
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(
-            text ?? '',
-            style: TextStyle(
-              fontSize: 18,
-              color: textColor ?? GColors.white,
-              fontWeight: fontWeight ?? FontWeight.normal,
+    return NeoPopButton(
+      onTapUp: onPressed,
+      color: backgroundColor ?? GColors.black,
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              text ?? '',
+              style: TextStyle(
+                fontSize: 18,
+                color: textColor ?? GColors.white,
+                fontWeight: fontWeight ?? FontWeight.normal,
+              ),
             ),
-          ),
-          SizedBox(width: 10),
-          Icon(
-            icon,
-            color: textColor ?? GColors.white,
-          ),
-        ],
+            SizedBox(width: 10),
+            Icon(
+              icon,
+              color: textColor ?? GColors.white,
+            ),
+          ],
+        ),
       ),
     );
   }

@@ -4,11 +4,13 @@ main:
     ✔ test new games with android emu @done(25-01-28 23:52)
     ✔ add mesh bg to app scaffold @done(25-01-31 02:11)
     ✔ fix general ui @done(25-01-31 02:12)
+    ✔ make logo like squareo @done(25-02-01 00:11)
+    ✔ animate images @done(25-02-01 00:11)
+    ✔ make global appbar @done(25-02-01 00:11)
+    ☐ make note for icon change
     ☐ fix web icon
-    ☐ make logo like squareo
-    ☐ animate images
+    ☐ join room ui
     ☐ move images to server
-    ☐ make global appbar
     ☐ check the comebacks
     ☐ fix player remove
     ☐ points
