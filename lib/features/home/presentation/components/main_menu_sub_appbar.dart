@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:neopop/neopop.dart';
 import 'package:rapid_rounds/config/extensions/build_context_extension.dart';
-import 'package:rapid_rounds/config/utils/animated_color_icon.dart';
 import 'package:rapid_rounds/config/utils/custom_icons.dart';
 import 'package:rapid_rounds/config/utils/global_colors.dart';
 
-class MainMenuAppbar extends StatelessWidget implements PreferredSizeWidget {
-  const MainMenuAppbar({
+class MainMenuSubAppbar extends StatelessWidget implements PreferredSizeWidget {
+  final String text;
+
+  const MainMenuSubAppbar({
     super.key,
+    required this.text,
   });
 
   @override
@@ -22,22 +24,14 @@ class MainMenuAppbar extends StatelessWidget implements PreferredSizeWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              AnimatedColorIcon(
-                icon: Custom.mon_5,
-                colors: [
-                  GColors.black,
-                  Colors.grey.shade800,
-                  Colors.grey.shade900,
-                  GColors.black,
-                ],
-                rotationAngle: 1,
-                rotationDuration: Duration(seconds: 3),
-                colorDuration: Duration(seconds: 3),
+              Icon(
+                Custom.mon_5,
+                color: GColors.black,
                 size: 40,
               ),
               SizedBox(width: 5),
               Text(
-                'Rapid Rounds',
+                text,
                 style: TextStyle(
                   color: GColors.black,
                   fontFamily: 'Barr',
@@ -53,7 +47,7 @@ class MainMenuAppbar extends StatelessWidget implements PreferredSizeWidget {
             onTapUp: () => context.pop(),
             color: GColors.gray,
             child: Icon(
-              Icons.menu_rounded,
+              Custom.arrow_small_left,
               color: GColors.black,
               size: 25,
             ),
@@ -68,7 +62,7 @@ class MainMenuAppbar extends StatelessWidget implements PreferredSizeWidget {
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Icon(
-                  Icons.settings,
+                  Icons.report_problem_outlined,
                   color: GColors.black,
                   size: 25,
                 ),

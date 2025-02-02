@@ -1,7 +1,9 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:rapid_rounds/config/extensions/build_context_extension.dart';
 import 'package:rapid_rounds/config/utils/app_scaffold.dart';
 import 'package:rapid_rounds/config/utils/constants.dart';
+import 'package:rapid_rounds/config/utils/global_colors.dart';
 import 'package:rapid_rounds/features/home/domain/models/widget_position.dart';
 import 'package:rapid_rounds/features/home/presentation/components/main_menu_appbar.dart';
 import 'package:rapid_rounds/features/home/presentation/components/room_manage_container.dart';
@@ -20,7 +22,6 @@ class _HomePageState extends State<HomePage> {
   TextEditingController nameController = TextEditingController();
   WidgetPosition buttonsPosition = WidgetPosition();
   WidgetPosition roomButtonPosition = WidgetPosition();
-  double imageOpacity = 0;
 
   @override
   void initState() {
@@ -29,15 +30,13 @@ class _HomePageState extends State<HomePage> {
     nameController.text = 'Player-${Random().nextInt(900) + 100}';
     buttonsPosition.right = 110;
     buttonsPosition.width = 250;
-    imageOpacity = 0;
 
     Future.delayed(
-      Duration(milliseconds: 100),
+      Duration(milliseconds: 500),
       () {
         setState(() {
           buttonsPosition.right = 0;
           buttonsPosition.width = 150;
-          imageOpacity = 1;
         });
       },
     );
@@ -53,44 +52,35 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return AppScaffold(
       appBar: MainMenuAppbar(),
-      body: Center(
-        child: ConstrainedBox(
-          constraints: BoxConstraints(
-            maxWidth: Constants.listViewWidth,
-          ),
-          child: ListView(
-            shrinkWrap: true,
-            padding: EdgeInsets.symmetric(horizontal: 8),
-            children: [
-              NameContainer(
-                nameController: nameController,
-                widgetPosition: buttonsPosition,
-                imageOpacity: imageOpacity,
-              ),
-              SizedBox(height: 20),
-              RoomManageContainer(
-                widgetPosition: buttonsPosition,
-                imageOpacity: imageOpacity,
-                onCreateRoomPressed: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (_) => CreateRoomPage(
-                      playerName: nameController.text,
-                    ),
+      points: GColors.scaffoldMesh,
+      body: SafeArea(
+        child: Center(
+          child: ConstrainedBox(
+            constraints: BoxConstraints(
+              maxWidth: Constants.listViewWidth,
+            ),
+            child: ListView(
+              shrinkWrap: true,
+              padding: EdgeInsets.all(8),
+              children: [
+                NameContainer(
+                  nameController: nameController,
+                  widgetPosition: buttonsPosition,
+                ),
+                SizedBox(height: 20),
+                RoomManageContainer(
+                  widgetPosition: buttonsPosition,
+                  onCreateRoomPressed: () => context.push(
+                    CreateRoomPage(playerName: nameController.text),
+                  ),
+                  onJoinRoomPressed: () => context.push(
+                    JoinRoomPage(playerName: nameController.text),
                   ),
                 ),
-                onJoinRoomPressed: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (_) => JoinRoomPage(
-                      playerName: nameController.text,
-                    ),
-                  ),
-                ),
-              ),
-              //? maybe
-              // AboutContainer(),
-            ],
+                //? maybe
+                // AboutContainer(),
+              ],
+            ),
           ),
         ),
       ),

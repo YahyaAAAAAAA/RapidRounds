@@ -36,6 +36,12 @@ class MyApp extends StatelessWidget {
         ),
       ],
       child: MaterialApp(
+        // scrollBehavior: ScrollConfiguration.of(context).copyWith(
+        //   dragDevices: {
+        //     PointerDeviceKind.touch,
+        //     PointerDeviceKind.mouse,
+        //   },
+        // ),
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
           fontFamily: 'Abel',

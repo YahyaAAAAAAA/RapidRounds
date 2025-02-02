@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:mesh_gradient/mesh_gradient.dart';
 import 'package:rapid_rounds/config/utils/global_colors.dart';
@@ -10,6 +11,7 @@ class AppScaffold extends StatelessWidget {
   final Color? backgroundColor;
   final String backgroundImage;
   final double? opacity;
+  final List<MeshGradientPoint>? points;
 
   const AppScaffold({
     super.key,
@@ -20,6 +22,7 @@ class AppScaffold extends StatelessWidget {
     this.backgroundImage = 'assets/images/bg.png',
     this.bottomNavigationBar,
     this.opacity,
+    this.points,
   });
 
   @override
@@ -28,22 +31,29 @@ class AppScaffold extends StatelessWidget {
       appBar: appBar,
       extendBodyBehindAppBar: true,
       body: MeshGradient(
-        options: MeshGradientOptions(),
-        points: GColors.scaffoldMesh,
-        child: Container(
-          decoration: BoxDecoration(
-            color: backgroundColor ?? GColors.transparent,
-            image: DecorationImage(
-              image: AssetImage(backgroundImage),
-              fit: BoxFit.cover,
-              opacity: opacity ?? 0.2,
+        options: MeshGradientOptions(
+          noiseIntensity: 0,
+        ),
+        points: points ?? GColors.scaffoldMesh,
+        child: Stack(
+          children: [
+            SizedBox(
+              width: MediaQuery.of(context).size.width,
+              height: MediaQuery.of(context).size.height,
+              child: Opacity(
+                opacity: opacity ?? 0.1,
+                child: CachedNetworkImage(
+                  imageUrl: 'https://i.ibb.co/tpnYSJcB/bg.png',
+                  fit: BoxFit.cover,
+                ),
+              ),
             ),
-          ),
-          child: body,
+            body,
+          ],
         ),
       ),
       floatingActionButton: floatingActionButton,
-      backgroundColor: backgroundColor,
+      backgroundColor: backgroundColor ?? GColors.springWood,
       bottomNavigationBar: bottomNavigationBar,
     );
   }

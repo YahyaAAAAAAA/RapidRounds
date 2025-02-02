@@ -1,7 +1,9 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:rapid_rounds/config/utils/constants.dart';
 import 'package:rapid_rounds/config/utils/custom_icons.dart';
 import 'package:rapid_rounds/config/utils/global_colors.dart';
+import 'package:rapid_rounds/config/utils/global_loading.dart';
 import 'package:rapid_rounds/features/home/domain/models/widget_position.dart';
 import 'package:rapid_rounds/features/home/presentation/components/home_button.dart';
 
@@ -9,12 +11,10 @@ class RoomManageContainer extends StatelessWidget {
   final void Function()? onCreateRoomPressed;
   final void Function()? onJoinRoomPressed;
   final WidgetPosition widgetPosition;
-  final double imageOpacity;
 
   const RoomManageContainer({
     super.key,
     required this.widgetPosition,
-    required this.imageOpacity,
     this.onCreateRoomPressed,
     this.onJoinRoomPressed,
   });
@@ -36,16 +36,13 @@ class RoomManageContainer extends StatelessWidget {
             Positioned(
               right: -15,
               bottom: -11,
-              //todo cached image
-              child: AnimatedOpacity(
-                duration: Duration(milliseconds: 300),
-                opacity: imageOpacity,
-                child: Image.asset(
-                  'assets/images/mon4.png',
-                  width: 200,
-                  height: 250,
-                  fit: BoxFit.contain,
-                ),
+              child: CachedNetworkImage(
+                imageUrl: 'https://i.ibb.co/kVjMX49K/mon4.png',
+                progressIndicatorBuilder: (context, url, progress) =>
+                    GLoading(),
+                width: 200,
+                height: 250,
+                fit: BoxFit.contain,
               ),
             ),
             Padding(

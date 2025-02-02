@@ -1,5 +1,7 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:rapid_rounds/config/utils/global_colors.dart';
+import 'package:rapid_rounds/config/utils/global_loading.dart';
 import 'package:rapid_rounds/config/utils/shadows.dart';
 import 'package:rapid_rounds/features/home/presentation/components/home_button.dart';
 
@@ -30,8 +32,10 @@ class AboutContainer extends StatelessWidget {
                 alignment: Alignment.center,
                 transform: Matrix4.identity()
                   ..scale(-1.0, 1.0), // Flip horizontally
-                child: Image.asset(
-                  'assets/images/mon2.png',
+                child: CachedNetworkImage(
+                  imageUrl: 'https://i.ibb.co/XkZhzxQG/mon2.png',
+                  progressIndicatorBuilder: (context, url, progress) =>
+                      GLoading(),
                   width: 200,
                   height: 120,
                   fit: BoxFit.contain,

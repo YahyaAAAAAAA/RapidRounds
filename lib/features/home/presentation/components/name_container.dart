@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:rapid_rounds/config/utils/constants.dart';
 import 'package:rapid_rounds/config/utils/custom_icons.dart';
@@ -7,13 +8,11 @@ import 'package:rapid_rounds/features/home/presentation/components/home_button.d
 
 class NameContainer extends StatelessWidget {
   final WidgetPosition widgetPosition;
-  final double imageOpacity;
 
   const NameContainer({
     super.key,
     required this.nameController,
     required this.widgetPosition,
-    required this.imageOpacity,
   });
 
   final TextEditingController nameController;
@@ -40,17 +39,14 @@ class NameContainer extends StatelessWidget {
             Positioned(
               right: -23,
               bottom: -30,
-              child: AnimatedOpacity(
-                duration: Duration(milliseconds: 300),
-                opacity: imageOpacity,
-                child: Image.asset(
-                  'assets/images/mon3.png',
-                  width: 200,
-                  height: 250,
-                  fit: BoxFit.contain,
-                ),
+              child: CachedNetworkImage(
+                imageUrl: 'https://i.ibb.co/mWJHQ0X/mon3.png',
+                width: 200,
+                height: 250,
+                fit: BoxFit.contain,
               ),
             ),
+
             // Text
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -71,6 +67,12 @@ class NameContainer extends StatelessWidget {
                     controller: nameController,
                     decoration: InputDecoration(
                       hintText: 'Your Name',
+                      focusedBorder: UnderlineInputBorder(
+                        borderSide: const BorderSide(
+                          color: Colors.black,
+                          width: 2.0,
+                        ),
+                      ),
                     ),
                   ),
                 ),

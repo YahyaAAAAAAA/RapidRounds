@@ -25,28 +25,45 @@ class GColors {
         0,
         0,
       ),
-      color: const Color(0xFFf5f4ed),
+      color: const Color.fromARGB(255, 244, 242, 226),
+    ),
+    MeshGradientPoint(
+      position: const Offset(
+        1,
+        1,
+      ),
+      color: const Color.fromARGB(255, 244, 242, 226),
+    ),
+  ];
+
+  static List<MeshGradientPoint> scaffoldMeshSun = [
+    MeshGradientPoint(
+      position: const Offset(
+        0,
+        0,
+      ),
+      color: Colors.orange.shade600,
     ),
     MeshGradientPoint(
       position: const Offset(
         1,
         0,
       ),
-      color: const Color(0xFFDEDDD3),
-    ),
-    MeshGradientPoint(
-      position: const Offset(
-        1,
-        1,
-      ),
-      color: const Color(0xFFf5f4ed),
+      color: Colors.orange.shade700,
     ),
     MeshGradientPoint(
       position: const Offset(
         0,
         1,
       ),
-      color: const Color.fromARGB(255, 222, 221, 211),
+      color: Colors.orange.shade700,
+    ),
+    MeshGradientPoint(
+      position: const Offset(
+        1,
+        1,
+      ),
+      color: Colors.orange.shade600,
     ),
   ];
 }
