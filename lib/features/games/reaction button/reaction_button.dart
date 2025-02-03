@@ -9,6 +9,9 @@ class ReactionButton extends Game {
     required super.id,
     required super.type,
     required super.roomId,
+    super.description,
+    super.enabled,
+    super.icon,
     int? delay,
   }) : delay = delay ?? Random().nextInt(4000000) + 2000000;
 

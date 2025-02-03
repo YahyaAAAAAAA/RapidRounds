@@ -10,6 +10,7 @@ import 'package:rapid_rounds/config/utils/global_colors.dart';
 import 'package:rapid_rounds/config/utils/global_loading.dart';
 import 'package:rapid_rounds/features/home/presentation/components/main_menu_sub_appbar.dart';
 import 'package:rapid_rounds/features/room/presentation/cubits/room_cubit.dart';
+import 'package:rapid_rounds/features/room/presentation/cubits/room_state.dart';
 import 'room_page.dart';
 
 class JoinRoomPage extends StatefulWidget {
@@ -103,65 +104,82 @@ class _JoinRoomPageState extends State<JoinRoomPage> {
                             fit: BoxFit.contain,
                           ),
                         ),
-                        Positioned(
-                          bottom: 20,
-                          right: 10,
-                          width: 250,
-                          child: NeoPopTiltedButton(
-                            isFloating: true,
-                            onTapUp: () async {
-                              final roomId = roomCodeController.text.trim();
-
-                              if (roomId.isEmpty) {
-                                setState(() => errorText = 'Enter Code');
-                                return;
-                              }
-
-                              final success = await roomCubit.joinRoom(
-                                  roomId, widget.playerName);
-
-                              if (!mounted) return;
-
-                              if (success) {
-                                navigateToRoom(roomId);
-                              } else {
-                                setState(() => errorText = 'Invalid Code');
-                              }
-                            },
-                            decoration: NeoPopTiltedButtonDecoration(
-                              color: GColors.sunGlow,
-                              showShimmer: true,
-                              shadowColor: GColors.black.withValues(alpha: 0.5),
-                            ),
+                        BlocBuilder<RoomCubit, RoomStates>(
+                            builder: (context, state) {
+                          //loading (when done will navigate out)
+                          return Align(
+                            alignment: Alignment.bottomCenter,
                             child: Padding(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 80.0,
-                                vertical: 15,
-                              ),
-                              child: FittedBox(
-                                fit: BoxFit.scaleDown,
-                                child: Row(
-                                  children: [
-                                    Text(
-                                      'Join Room',
-                                      style: TextStyle(
-                                        color: GColors.black,
-                                        fontSize: 25,
-                                        fontWeight: FontWeight.bold,
-                                        fontStyle: FontStyle.italic,
-                                      ),
-                                    ),
-                                    SizedBox(width: 10),
-                                    Icon(
-                                      Custom.arrow_small_right,
-                                      color: GColors.black,
-                                    )
-                                  ],
+                              padding: const EdgeInsets.only(bottom: 10),
+                              child: NeoPopTiltedButton(
+                                isFloating: true,
+                                onTapUp: () async {
+                                  final roomId = roomCodeController.text.trim();
+
+                                  if (roomId.isEmpty) {
+                                    setState(() => errorText = 'Enter Code');
+                                    return;
+                                  }
+
+                                  final success = await roomCubit.joinRoom(
+                                      roomId, widget.playerName);
+
+                                  if (!mounted) return;
+
+                                  if (success) {
+                                    navigateToRoom(roomId);
+                                  } else {
+                                    setState(() => errorText = 'Invalid Code');
+                                  }
+                                },
+                                decoration: NeoPopTiltedButtonDecoration(
+                                  color: GColors.sunGlow,
+                                  showShimmer: true,
+                                  shadowColor:
+                                      GColors.black.withValues(alpha: 0.5),
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 80.0,
+                                    vertical: 15,
+                                  ),
+                                  child: AnimatedContainer(
+                                    width: state is RoomLoading ? 60 : 120,
+                                    duration: Duration(milliseconds: 300),
+                                    child: state is RoomLoading
+                                        ? FittedBox(
+                                            fit: BoxFit.scaleDown,
+                                            child: GLoading(
+                                              color: GColors.black,
+                                            ),
+                                          )
+                                        : FittedBox(
+                                            fit: BoxFit.scaleDown,
+                                            child: Row(
+                                              children: [
+                                                Text(
+                                                  'Join Room',
+                                                  style: TextStyle(
+                                                    color: GColors.black,
+                                                    fontSize: 25,
+                                                    fontWeight: FontWeight.bold,
+                                                    fontStyle: FontStyle.italic,
+                                                  ),
+                                                ),
+                                                SizedBox(width: 10),
+                                                Icon(
+                                                  Custom.arrow_small_right,
+                                                  color: GColors.black,
+                                                )
+                                              ],
+                                            ),
+                                          ),
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
-                        ),
+                          );
+                        }),
                         Row(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [

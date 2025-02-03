@@ -1,0 +1,111 @@
+// ignore_for_file: constant_identifier_names
+
+import 'package:flutter/widgets.dart';
+
+class Avatars {
+  Avatars._();
+
+  static const _kFontFam = 'Avatars';
+  static const String? _kFontPkg = null;
+
+  static const IconData annoyed_1 =
+      IconData(0xe869, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData annoyed =
+      IconData(0xe86a, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData bored =
+      IconData(0xe86b, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData confused =
+      IconData(0xe86c, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData crying =
+      IconData(0xe86d, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData death =
+      IconData(0xe86e, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData evil_1 =
+      IconData(0xe86f, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData excited_1 =
+      IconData(0xe870, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData freak =
+      IconData(0xe871, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData excited =
+      IconData(0xe872, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData happy_1 =
+      IconData(0xe873, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData goofy =
+      IconData(0xe874, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData happy_3 =
+      IconData(0xe875, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData happy_2 =
+      IconData(0xe876, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData happy_4 =
+      IconData(0xe877, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData happy_6 =
+      IconData(0xe878, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData happy_8 =
+      IconData(0xe879, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData heart_eyes =
+      IconData(0xe87a, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData grumpy =
+      IconData(0xe87b, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData in_love =
+      IconData(0xe87c, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData love_2 =
+      IconData(0xe87d, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData happy_9 =
+      IconData(0xe87e, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData laughing =
+      IconData(0xe87f, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData love_3 =
+      IconData(0xe880, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData love_1 =
+      IconData(0xe881, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData sad =
+      IconData(0xe882, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData sad_1 =
+      IconData(0xe883, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData scared =
+      IconData(0xe884, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData shocked =
+      IconData(0xe885, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData scared_1 =
+      IconData(0xe886, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData silly =
+      IconData(0xe887, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData love =
+      IconData(0xe888, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData worried =
+      IconData(0xe889, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData worried_1 =
+      IconData(0xe88a, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData worried_3 =
+      IconData(0xe88b, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData amazed_2 =
+      IconData(0xe88c, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData zombie =
+      IconData(0xe88d, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData amazed =
+      IconData(0xe88e, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData worried_2 =
+      IconData(0xe88f, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData angry_3 =
+      IconData(0xe890, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData angry_1 =
+      IconData(0xe891, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData sad_2 =
+      IconData(0xe892, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData evil =
+      IconData(0xe893, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData angry =
+      IconData(0xe894, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData happy =
+      IconData(0xe895, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData shocked_1 =
+      IconData(0xe896, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData angry_4 =
+      IconData(0xe897, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData unamused =
+      IconData(0xe898, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData angry_2 =
+      IconData(0xe899, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData amazed_1 =
+      IconData(0xe89a, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+}

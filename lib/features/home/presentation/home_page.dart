@@ -1,5 +1,6 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:rapid_rounds/config/enums/avatars.dart';
 import 'package:rapid_rounds/config/extensions/build_context_extension.dart';
 import 'package:rapid_rounds/config/utils/app_scaffold.dart';
 import 'package:rapid_rounds/config/utils/constants.dart';
@@ -22,6 +23,7 @@ class _HomePageState extends State<HomePage> {
   TextEditingController nameController = TextEditingController();
   WidgetPosition buttonsPosition = WidgetPosition();
   WidgetPosition roomButtonPosition = WidgetPosition();
+  int avatarIndex = 0;
 
   @override
   void initState() {
@@ -48,6 +50,12 @@ class _HomePageState extends State<HomePage> {
     super.dispose();
   }
 
+  void _updateAvatarIndex(int newIndex) {
+    setState(() {
+      avatarIndex = newIndex;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return AppScaffold(
@@ -66,6 +74,12 @@ class _HomePageState extends State<HomePage> {
                 NameContainer(
                   nameController: nameController,
                   widgetPosition: buttonsPosition,
+                  avatarIndex: avatarIndex,
+                  onNext: () => _updateAvatarIndex(
+                      (avatarIndex + 1) % AvatarIcon.values.length),
+                  onBack: () => _updateAvatarIndex(
+                      (avatarIndex - 1 + AvatarIcon.values.length) %
+                          AvatarIcon.values.length),
                 ),
                 SizedBox(height: 20),
                 RoomManageContainer(

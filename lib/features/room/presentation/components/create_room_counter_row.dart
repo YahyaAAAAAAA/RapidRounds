@@ -24,7 +24,7 @@ class CreateRoomCounterRow extends StatelessWidget {
       fit: BoxFit.scaleDown,
       child: Container(
         decoration: BoxDecoration(
-          color: GColors.springWood.withValues(alpha: 0.5),
+          color: GColors.springWood.withValues(alpha: 0.8),
           borderRadius: BorderRadius.circular(
             Constants.outterRadius,
           ),
@@ -62,6 +62,7 @@ class CreateRoomCounterRow extends StatelessWidget {
                   style: TextStyle(
                     color: GColors.black,
                     fontSize: 17,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
               ),

@@ -36,4 +36,8 @@ class Custom {
       IconData(0xe865, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData arrow_small_up =
       IconData(0xe866, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData reactionbutton =
+      IconData(0xe867, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData colormatch =
+      IconData(0xe868, fontFamily: _kFontFam, fontPackage: _kFontPkg);
 }

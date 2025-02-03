@@ -1,12 +1,23 @@
-import 'package:flutter/gestures.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:neopop/widgets/buttons/neopop_tilted_button/neopop_tilted_button.dart';
+import 'package:rapid_rounds/config/extensions/build_context_extension.dart';
 import 'package:rapid_rounds/config/utils/app_scaffold.dart';
 import 'package:rapid_rounds/config/utils/constants.dart';
+import 'package:rapid_rounds/config/utils/custom_icons.dart';
 import 'package:rapid_rounds/config/utils/global_colors.dart';
+import 'package:rapid_rounds/config/utils/global_loading.dart';
+import 'package:rapid_rounds/features/games/game.dart';
+import 'package:rapid_rounds/features/games/match%20color/color_match.dart';
+import 'package:rapid_rounds/features/games/reaction%20button/reaction_button.dart';
 import 'package:rapid_rounds/features/home/presentation/components/main_menu_sub_appbar.dart';
+import 'package:rapid_rounds/features/room/presentation/components/available_games_row.dart';
 import 'package:rapid_rounds/features/room/presentation/components/create_room_counter_row.dart';
+import 'package:rapid_rounds/features/room/presentation/components/game_list_item.dart';
+import 'package:rapid_rounds/features/room/presentation/components/games_list.dart';
 import 'package:rapid_rounds/features/room/presentation/cubits/room_cubit.dart';
+import 'package:rapid_rounds/features/room/presentation/cubits/room_state.dart';
 import 'room_page.dart';
 
 class CreateRoomPage extends StatefulWidget {
@@ -24,144 +35,291 @@ class CreateRoomPage extends StatefulWidget {
 class _CreateRoomPageState extends State<CreateRoomPage> {
   late final RoomCubit roomCubit;
 
+  final int maxRoundsCount = 30;
+  final int minRoundsCount = 1;
+  final int maxPlayersCount = 10;
+  final int minPlayersCount = 1;
+  int roundsCount = 5;
+  int playersCount = 3;
+
+  bool gamesShown = false;
+  //todo comeback
+  final List<Game> games = [
+    ReactionButton(
+      id: '0',
+      type: 'ReactionButton',
+      roomId: '0',
+      enabled: true,
+      description: 'Press the button when it turns green.',
+      icon: Custom.reactionbutton,
+    ),
+    ColorMatch(
+      id: '0',
+      type: 'ColorMatch',
+      roomId: '0',
+      pattern: 0,
+      enabled: true,
+      description: 'Remember the board, after 3-seconds replicate it.',
+      icon: Custom.colormatch,
+    ),
+  ];
+
   @override
   void initState() {
     super.initState();
 
     //get cubit
     roomCubit = context.read<RoomCubit>();
-
-    // createRoom();
   }
 
   Future<void> createRoom() async {
     //create room
-    final roomId = await roomCubit.createRoom(widget.playerName);
+    final roomId = await roomCubit.createRoom(
+      widget.playerName,
+      roundsCount,
+      playersCount,
+    );
 
     //ensure mounted
     if (!mounted) return;
 
     //navigate to room
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(
-        builder: (_) => RoomPage(roomId: roomId),
-      ),
-    );
+    context.replace(RoomPage(roomId: roomId));
   }
 
   @override
   Widget build(BuildContext context) {
     return AppScaffold(
-      appBar: MainMenuSubAppbar(text: 'Create Room'),
-      body: SafeArea(
-        child: Center(
-          child: ConstrainedBox(
-            constraints: BoxConstraints(
-              maxWidth: Constants.listViewWidth,
-            ),
-            child: ListView(
-              shrinkWrap: true,
-              padding: EdgeInsets.all(8),
-              children: [
-                FittedBox(
-                  fit: BoxFit.scaleDown,
-                  child: Container(
-                    padding: const EdgeInsets.only(
-                      left: 12,
-                      top: 15,
-                    ),
-                    width: 400,
-                    height: 500,
-                    decoration: BoxDecoration(
-                      color: GColors.gray,
-                      borderRadius:
-                          BorderRadius.circular(Constants.outterRadius),
-                    ),
-                    child: Stack(
-                      children: [
-                        Positioned(
-                          // top: 15,
-                          left: 30,
-                          child: Image.asset(
-                            'assets/images/mon9.png',
-                            fit: BoxFit.contain,
-                            width: 400,
-                            height: 500,
+        appBar: MainMenuSubAppbar(text: 'Create Room'),
+        body: SafeArea(
+          child: Center(
+            child: ConstrainedBox(
+              constraints: BoxConstraints(
+                maxWidth: Constants.listViewWidth,
+              ),
+              child: ListView(
+                shrinkWrap: true,
+                padding: EdgeInsets.all(8),
+                children: [
+                  FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: Container(
+                      width: 400,
+                      height: 560,
+                      decoration: BoxDecoration(
+                        color: GColors.gray,
+                        borderRadius:
+                            BorderRadius.circular(Constants.outterRadius),
+                      ),
+                      child: Stack(
+                        children: [
+                          //* images
+                          Positioned(
+                            left: 80,
+                            bottom: 10,
+                            child: CachedNetworkImage(
+                              imageUrl: 'https://i.ibb.co/mCd0rWrr/mon9.png',
+                              progressIndicatorBuilder:
+                                  (context, url, progress) => GLoading(
+                                value: progress.progress,
+                              ),
+                              errorWidget: (context, url, error) => SizedBox(),
+                              fit: BoxFit.contain,
+                              width: 400,
+                              height: 500,
+                            ),
                           ),
-                        ),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          spacing: 20,
-                          children: [
-                            Text(
-                              '• Create Room',
-                              style: TextStyle(
-                                color: GColors.black,
-                                fontSize: 20,
-                                fontFamily: 'Barr',
+                          Positioned(
+                            right: 30,
+                            top: -30,
+                            child: Transform.rotate(
+                              angle: 10,
+                              child: CachedNetworkImage(
+                                imageUrl: 'https://i.ibb.co/ynpK52vD/mon11.png',
+                                progressIndicatorBuilder:
+                                    (context, url, progress) => GLoading(
+                                  value: progress.progress,
+                                ),
+                                errorWidget: (context, url, error) =>
+                                    SizedBox(),
+                                fit: BoxFit.contain,
+                                width: 100,
+                                height: 100,
                               ),
                             ),
-                            CreateRoomCounterRow(
-                              text: 'Rounds Number',
-                              counter: 10,
-                              onIncrement: () {},
-                              onDecrement: () {},
+                          ),
+                          Positioned(
+                            left: -40,
+                            bottom: 50,
+                            child: Transform.rotate(
+                              angle: 26,
+                              child: CachedNetworkImage(
+                                imageUrl: 'https://i.ibb.co/whPQYRQC/mon10.png',
+                                progressIndicatorBuilder:
+                                    (context, url, progress) => GLoading(
+                                  value: progress.progress,
+                                ),
+                                errorWidget: (context, url, error) =>
+                                    SizedBox(),
+                                fit: BoxFit.contain,
+                                width: 150,
+                                height: 150,
+                              ),
                             ),
-                            CreateRoomCounterRow(
-                              text: 'Players Count',
-                              counter: 15,
-                              onIncrement: () {},
-                              onDecrement: () {},
-                            ),
-                            SizedBox(
-                              width: 250,
-                              height: 50,
-                              child: ScrollConfiguration(
-                                behavior: MyCustomScrollBehavior(),
-                                child: ListView.separated(
-                                  shrinkWrap: true,
-                                  itemCount: 15,
-                                  scrollDirection: Axis.horizontal,
-                                  separatorBuilder: (context, index) =>
-                                      SizedBox(width: 10),
+                          ),
+                          //* fields
+                          Padding(
+                            padding: const EdgeInsets.all(12),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              spacing: 20,
+                              children: [
+                                Text(
+                                  '• Create Room',
+                                  style: TextStyle(
+                                    color: GColors.black,
+                                    fontSize: 20,
+                                    fontFamily: 'Barr',
+                                  ),
+                                ),
+                                CreateRoomCounterRow(
+                                  text: 'Rounds Count',
+                                  counter: roundsCount,
+                                  onIncrement: () {
+                                    if (roundsCount >= maxRoundsCount) {
+                                      return;
+                                    }
+
+                                    setState(() => roundsCount++);
+                                  },
+                                  onDecrement: () {
+                                    if (roundsCount <= minRoundsCount) {
+                                      return;
+                                    }
+
+                                    setState(() => roundsCount--);
+                                  },
+                                ),
+                                CreateRoomCounterRow(
+                                  text: 'Players Count',
+                                  counter: playersCount,
+                                  onIncrement: () {
+                                    if (playersCount >= maxPlayersCount) {
+                                      return;
+                                    }
+
+                                    setState(() => playersCount++);
+                                  },
+                                  onDecrement: () {
+                                    if (playersCount <= minPlayersCount) {
+                                      return;
+                                    }
+
+                                    setState(() => playersCount--);
+                                  },
+                                ),
+                                AvailableGamesRow(
+                                  onTapUp: () => setState(
+                                    () => gamesShown = !gamesShown,
+                                  ),
+                                  gamesShown: gamesShown,
+                                ),
+                                GamesList(
+                                  gamesShown: gamesShown,
+                                  games: games,
                                   itemBuilder: (context, index) {
-                                    return Container(
-                                      color: GColors.black,
-                                      width: 50,
-                                      height: 50,
+                                    return GameListItem(
+                                      game: games[index],
+                                      onChanged: (value) => setState(
+                                        () => games[index].enabled =
+                                            !games[index].enabled!,
+                                      ),
                                     );
                                   },
                                 ),
-                              ),
-                            )
-                          ],
-                        ),
-                      ],
+                              ],
+                            ),
+                          ),
+                          //* create room button
+                          BlocBuilder<RoomCubit, RoomStates>(
+                            builder: (context, state) {
+                              //loading (when done will navigate out)
+                              return Align(
+                                alignment: Alignment.bottomCenter,
+                                child: Padding(
+                                  padding: const EdgeInsets.only(bottom: 10),
+                                  child: NeoPopTiltedButton(
+                                    isFloating: true,
+                                    onTapUp: () async {
+                                      if (state is RoomLoading) {
+                                        return;
+                                      }
+
+                                      await createRoom();
+                                    },
+                                    decoration: NeoPopTiltedButtonDecoration(
+                                      color: GColors.sunGlow,
+                                      showShimmer: true,
+                                      shadowColor:
+                                          GColors.black.withValues(alpha: 0.5),
+                                    ),
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 80.0,
+                                        vertical: 15,
+                                      ),
+                                      child: AnimatedContainer(
+                                        width: state is RoomLoading ? 60 : 150,
+                                        duration: Duration(milliseconds: 300),
+                                        child: state is RoomLoading
+                                            ? FittedBox(
+                                                fit: BoxFit.scaleDown,
+                                                child: GLoading(
+                                                  color: GColors.black,
+                                                ),
+                                              )
+                                            : FittedBox(
+                                                fit: BoxFit.scaleDown,
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                  mainAxisSize:
+                                                      MainAxisSize.min,
+                                                  children: [
+                                                    Text(
+                                                      'Create Room',
+                                                      style: TextStyle(
+                                                        color: GColors.black,
+                                                        fontSize: 25,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        fontStyle:
+                                                            FontStyle.italic,
+                                                      ),
+                                                    ),
+                                                    SizedBox(width: 10),
+                                                    Icon(
+                                                      Custom.arrow_small_right,
+                                                      color: GColors.black,
+                                                    )
+                                                  ],
+                                                ),
+                                              ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                        ],
+                      ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
-        ),
-      ),
-    );
-  }
-}
-
-//todo
-class MyCustomScrollBehavior extends MaterialScrollBehavior {
-  @override
-  Set<PointerDeviceKind> get dragDevices => {
-        PointerDeviceKind.touch,
-        PointerDeviceKind.mouse,
-        PointerDeviceKind.stylus,
-        PointerDeviceKind.trackpad,
-      };
-
-  Widget buildViewportChrome(
-      BuildContext context, Widget child, AxisDirection axisDirection) {
-    return child; // Disable the default glow effect
+        ));
   }
 }

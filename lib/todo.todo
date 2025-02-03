@@ -7,6 +7,7 @@ main:
     ✔ make logo like squareo @done(25-02-01 00:11)
     ✔ animate images @done(25-02-01 00:11)
     ✔ make global appbar @done(25-02-01 00:11)
+    ☐ check on all cahced images loading with values and sized box as error
     ☐ make note for icon change
     ☐ fix web icon
     ☐ join room ui

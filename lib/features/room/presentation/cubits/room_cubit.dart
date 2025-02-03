@@ -22,13 +22,13 @@ class RoomCubit extends Cubit<RoomStates> {
 
   RoomCubit({required this.roomRepo}) : super(RoomInitial());
 
-  Future<String> createRoom(String playerName) async {
-    //todo make game count dynamic
-    int count = 5;
+  Future<String> createRoom(
+      String playerName, int roundsCount, int playersCount) async {
+    emit(RoomLoading());
 
     try {
-      final roomId =
-          await roomRepo.createRoom(deviceId, playerName, generateGames(count));
+      final roomId = await roomRepo.createRoom(
+          deviceId, playerName, generateGames(roundsCount));
       emit(RoomCreated(roomId));
       return roomId;
     } catch (e) {
@@ -73,6 +73,8 @@ class RoomCubit extends Cubit<RoomStates> {
   }
 
   Future<bool> joinRoom(String roomId, String playerName) async {
+    emit(RoomLoading());
+
     try {
       final isJoined = await roomRepo.joinRoom(roomId, deviceId, playerName);
       if (!isJoined) {

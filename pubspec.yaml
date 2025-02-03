@@ -62,3 +62,6 @@ flutter:
     - family: Custom
       fonts:
         - asset: assets/fonts/Custom.ttf
+    - family: Avatars
+      fonts:
+        - asset: assets/fonts/Avatars.ttf

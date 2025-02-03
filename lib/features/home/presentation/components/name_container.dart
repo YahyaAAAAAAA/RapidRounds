@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:rapid_rounds/config/enums/avatars.dart';
 import 'package:rapid_rounds/config/utils/constants.dart';
 import 'package:rapid_rounds/config/utils/custom_icons.dart';
 import 'package:rapid_rounds/config/utils/global_colors.dart';
@@ -8,14 +9,19 @@ import 'package:rapid_rounds/features/home/presentation/components/home_button.d
 
 class NameContainer extends StatelessWidget {
   final WidgetPosition widgetPosition;
+  final TextEditingController nameController;
+  final int avatarIndex;
+  final VoidCallback? onNext;
+  final VoidCallback? onBack;
 
   const NameContainer({
     super.key,
     required this.nameController,
     required this.widgetPosition,
+    required this.avatarIndex,
+    this.onNext,
+    this.onBack,
   });
-
-  final TextEditingController nameController;
 
   @override
   Widget build(BuildContext context) {
@@ -61,16 +67,24 @@ class NameContainer extends StatelessWidget {
                   ),
                 ),
                 SizedBox(height: 20),
-                SizedBox(
-                  width: 100,
-                  child: TextField(
-                    controller: nameController,
-                    decoration: InputDecoration(
-                      hintText: 'Your Name',
-                      focusedBorder: UnderlineInputBorder(
-                        borderSide: const BorderSide(
-                          color: Colors.black,
-                          width: 2.0,
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 1),
+                  child: SizedBox(
+                    width: 120,
+                    child: TextField(
+                      controller: nameController,
+                      decoration: InputDecoration(
+                        hintText: 'Your Name',
+                        icon: Icon(
+                          AvatarIcon.values[avatarIndex].icon,
+                          color: GColors.black,
+                          size: 30,
+                        ),
+                        focusedBorder: UnderlineInputBorder(
+                          borderSide: const BorderSide(
+                            color: Colors.black,
+                            width: 2.0,
+                          ),
                         ),
                       ),
                     ),
@@ -86,8 +100,86 @@ class NameContainer extends StatelessWidget {
               right: widgetPosition.right,
               top: null,
               child: HomeButton(
-                onPressed: () {
-                  //todo handle button tap
+                onPressed: () async {
+                  final selectedAvatarIndex = await showDialog<int>(
+                    context: context,
+                    builder: (context) {
+                      int currentAvatarIndex =
+                          avatarIndex; // Local state inside the dialog
+
+                      return StatefulBuilder(
+                        builder: (context, setState) => AlertDialog(
+                          content: SizedBox(
+                            width: 250,
+                            height: 250,
+                            child: Column(
+                              children: [
+                                Text(
+                                  '${currentAvatarIndex + 1}/50',
+                                  style: TextStyle(
+                                    color: GColors.black,
+                                    fontSize: 20,
+                                  ),
+                                ),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceAround,
+                                  children: [
+                                    IconButton(
+                                      icon: Icon(Icons.arrow_back,
+                                          color: GColors.black),
+                                      onPressed: () {
+                                        setState(() {
+                                          currentAvatarIndex =
+                                              (currentAvatarIndex -
+                                                      1 +
+                                                      AvatarIcon
+                                                          .values.length) %
+                                                  AvatarIcon.values.length;
+                                        });
+                                        if (onBack != null) onBack!();
+                                      },
+                                    ),
+                                    Icon(
+                                      AvatarIcon
+                                          .values[currentAvatarIndex].icon,
+                                      color: GColors.black,
+                                      size: 25,
+                                    ),
+                                    IconButton(
+                                      icon: Icon(Icons.arrow_forward,
+                                          color: GColors.black),
+                                      onPressed: () {
+                                        setState(() {
+                                          currentAvatarIndex =
+                                              (currentAvatarIndex + 1) %
+                                                  AvatarIcon.values.length;
+                                        });
+                                        if (onNext != null) onNext!();
+                                      },
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                          actions: [
+                            TextButton(
+                              onPressed: () => Navigator.pop(context,
+                                  currentAvatarIndex), // Return the selected index
+                              child: Text('Save'),
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                  );
+
+                  // Update the parent's state with the selected avatar index
+                  if (selectedAvatarIndex != null) {
+                    onNext?.call();
+                    onBack?.call();
+                  }
                 },
                 icon: Custom.user_moustache,
                 backgroundColor: GColors.black,

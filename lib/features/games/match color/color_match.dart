@@ -14,6 +14,9 @@ class ColorMatch extends Game {
     required super.type,
     required super.roomId,
     required this.pattern,
+    super.description,
+    super.enabled,
+    super.icon,
   });
 
   ColorMatch.fromJson(Map<String, dynamic> json)
