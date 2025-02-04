@@ -1,7 +1,5 @@
-class Constants {
-  static double listViewWidth = 450;
+const double kListViewWidth = 450;
 
-  static double outterRadius = 12;
+const double kOutterRadius = 12;
 
-  static double innerRadius = 20;
-}
+const double kInnerRadius = 20;

@@ -127,7 +127,7 @@ class _ColorMatchWidgetState extends State<ColorMatchWidget> {
   Widget build(BuildContext context) {
     return Center(
       child: ConstrainedBox(
-        constraints: BoxConstraints(maxWidth: Constants.listViewWidth),
+        constraints: BoxConstraints(maxWidth: kListViewWidth),
         child: ListView(
           shrinkWrap: true,
           padding: EdgeInsets.all(12),

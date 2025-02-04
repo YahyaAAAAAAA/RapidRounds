@@ -13,8 +13,12 @@ class FirebaseRoomRepo implements RoomRepo {
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
 
   @override
-  Future<String> createRoom(
-      String deviceId, String playerName, List<Game> games) async {
+  Future<String> createRoom({
+    required String deviceId,
+    required String playerName,
+    required int playerAvatar,
+    required List<Game> games,
+  }) async {
     final roomId = const Uuid().v4().substring(0, 6).toUpperCase();
 
     //add room
@@ -35,6 +39,7 @@ class FirebaseRoomRepo implements RoomRepo {
         .set({
       'id': deviceId,
       'name': playerName,
+      'avatar': playerAvatar,
       'points': 0,
       'state': PlayerState.playing.name,
       'finishTimes': <int>[],
@@ -130,8 +135,12 @@ class FirebaseRoomRepo implements RoomRepo {
   }
 
   @override
-  Future<bool> joinRoom(
-      String roomId, String deviceId, String playerName) async {
+  Future<bool> joinRoom({
+    required String roomId,
+    required String deviceId,
+    required String playerName,
+    required int playerAvatar,
+  }) async {
     final docRef = firestore.collection('rooms').doc(roomId);
     final doc = await docRef.get();
 
@@ -143,6 +152,7 @@ class FirebaseRoomRepo implements RoomRepo {
     final newPlayer = {
       'id': deviceId,
       'name': playerName,
+      'avatar': playerAvatar,
       'points': 0,
       'state': PlayerState.playing.name,
       'finishTimes': <int>[],

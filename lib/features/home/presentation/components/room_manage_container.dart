@@ -1,11 +1,10 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:rapid_rounds/config/utils/background_image.dart';
 import 'package:rapid_rounds/config/utils/constants.dart';
 import 'package:rapid_rounds/config/utils/custom_icons.dart';
 import 'package:rapid_rounds/config/utils/global_colors.dart';
-import 'package:rapid_rounds/config/utils/global_loading.dart';
+import 'package:rapid_rounds/config/utils/pop_button.dart';
 import 'package:rapid_rounds/features/home/domain/models/widget_position.dart';
-import 'package:rapid_rounds/features/home/presentation/components/home_button.dart';
 
 class RoomManageContainer extends StatelessWidget {
   final void Function()? onCreateRoomPressed;
@@ -28,22 +27,16 @@ class RoomManageContainer extends StatelessWidget {
         height: 210,
         decoration: BoxDecoration(
           color: GColors.gray,
-          borderRadius: BorderRadius.circular(Constants.outterRadius),
-          // boxShadow: Shadows.elevation(),
+          borderRadius: BorderRadius.circular(kOutterRadius),
         ),
         child: Stack(
           children: [
-            Positioned(
+            BackgroundImage(
               right: -15,
               bottom: -11,
-              child: CachedNetworkImage(
-                imageUrl: 'https://i.ibb.co/kVjMX49K/mon4.png',
-                progressIndicatorBuilder: (context, url, progress) =>
-                    GLoading(),
-                width: 200,
-                height: 250,
-                fit: BoxFit.contain,
-              ),
+              imageUrl: 'https://i.ibb.co/kVjMX49K/mon4.png',
+              width: 200,
+              height: 250,
             ),
             Padding(
               padding: EdgeInsets.all(12),
@@ -69,10 +62,10 @@ class RoomManageContainer extends StatelessWidget {
               curve: Curves.easeInOut,
               left: 12,
               bottom: 100,
-              child: HomeButton(
-                onPressed: onCreateRoomPressed,
-                icon: Custom.magic_wand,
+              child: PopButton(
+                onTap: onCreateRoomPressed,
                 text: 'Create Room',
+                icon: Custom.magic_wand,
                 backgroundColor: GColors.sunGlow,
                 textColor: GColors.black,
                 fontWeight: FontWeight.bold,
@@ -84,8 +77,8 @@ class RoomManageContainer extends StatelessWidget {
               width: widgetPosition.width,
               left: 12,
               bottom: 40,
-              child: HomeButton(
-                onPressed: onJoinRoomPressed,
+              child: PopButton(
+                onTap: onJoinRoomPressed,
                 icon: Custom.leave,
                 text: 'Join Room',
               ),

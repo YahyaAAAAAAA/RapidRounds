@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:neopop/widgets/buttons/neopop_button/neopop_button.dart';
-import 'package:rapid_rounds/config/utils/constants.dart';
 import 'package:rapid_rounds/config/utils/custom_icons.dart';
 import 'package:rapid_rounds/config/utils/global_colors.dart';
+import 'package:rapid_rounds/config/utils/pop_button.dart';
 
 class AvailableGamesRow extends StatelessWidget {
   final void Function()? onTapUp;
@@ -18,13 +17,7 @@ class AvailableGamesRow extends StatelessWidget {
   Widget build(BuildContext context) {
     return FittedBox(
       fit: BoxFit.scaleDown,
-      child: Container(
-        decoration: BoxDecoration(
-          color: GColors.springWood.withValues(alpha: 0.8),
-          borderRadius: BorderRadius.circular(
-            Constants.outterRadius,
-          ),
-        ),
+      child: Padding(
         padding: EdgeInsets.all(12),
         child: Row(
           children: [
@@ -37,16 +30,11 @@ class AvailableGamesRow extends StatelessWidget {
               ),
             ),
             SizedBox(width: 10),
-            NeoPopButton(
-              onTapUp: onTapUp,
-              color: GColors.gray,
-              child: Padding(
-                padding: const EdgeInsets.all(4),
-                child: Icon(
+            PopButton.icon(
+              onTap: onTapUp,
+              padding: const EdgeInsets.all(4),
+              icon:
                   gamesShown ? Custom.arrow_small_up : Custom.arrow_small_down,
-                  color: GColors.black,
-                ),
-              ),
             ),
           ],
         ),

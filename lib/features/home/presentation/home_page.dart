@@ -6,6 +6,7 @@ import 'package:rapid_rounds/config/utils/app_scaffold.dart';
 import 'package:rapid_rounds/config/utils/constants.dart';
 import 'package:rapid_rounds/config/utils/global_colors.dart';
 import 'package:rapid_rounds/features/home/domain/models/widget_position.dart';
+import 'package:rapid_rounds/features/home/presentation/components/dialogs/avater_selector_dialog.dart';
 import 'package:rapid_rounds/features/home/presentation/components/main_menu_appbar.dart';
 import 'package:rapid_rounds/features/home/presentation/components/room_manage_container.dart';
 import 'package:rapid_rounds/features/home/presentation/components/name_container.dart';
@@ -23,11 +24,13 @@ class _HomePageState extends State<HomePage> {
   TextEditingController nameController = TextEditingController();
   WidgetPosition buttonsPosition = WidgetPosition();
   WidgetPosition roomButtonPosition = WidgetPosition();
-  int avatarIndex = 0;
+  int playerAvatar = 0;
 
   @override
   void initState() {
     super.initState();
+
+    playerAvatar = Random().nextInt(AvatarIcon.values.length);
 
     nameController.text = 'Player-${Random().nextInt(900) + 100}';
     buttonsPosition.right = 110;
@@ -50,12 +53,6 @@ class _HomePageState extends State<HomePage> {
     super.dispose();
   }
 
-  void _updateAvatarIndex(int newIndex) {
-    setState(() {
-      avatarIndex = newIndex;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return AppScaffold(
@@ -65,7 +62,7 @@ class _HomePageState extends State<HomePage> {
         child: Center(
           child: ConstrainedBox(
             constraints: BoxConstraints(
-              maxWidth: Constants.listViewWidth,
+              maxWidth: kListViewWidth,
             ),
             child: ListView(
               shrinkWrap: true,
@@ -74,21 +71,36 @@ class _HomePageState extends State<HomePage> {
                 NameContainer(
                   nameController: nameController,
                   widgetPosition: buttonsPosition,
-                  avatarIndex: avatarIndex,
-                  onNext: () => _updateAvatarIndex(
-                      (avatarIndex + 1) % AvatarIcon.values.length),
-                  onBack: () => _updateAvatarIndex(
-                      (avatarIndex - 1 + AvatarIcon.values.length) %
-                          AvatarIcon.values.length),
+                  avatarIndex: playerAvatar,
+                  onPressed: () => showDialog(
+                    context: context,
+                    builder: (context) => StatefulBuilder(
+                      builder: (context, dialogState) => AvatarSelectorDialog(
+                        avatarIndex: playerAvatar,
+                        onRandom: () => dialogState(() => setState(() =>
+                            playerAvatar =
+                                Random().nextInt(AvatarIcon.values.length))),
+                        onNext: () => dialogState(() => setState(() =>
+                            playerAvatar =
+                                (playerAvatar + 1) % AvatarIcon.values.length)),
+                      ),
+                    ),
+                  ),
                 ),
                 SizedBox(height: 20),
                 RoomManageContainer(
                   widgetPosition: buttonsPosition,
                   onCreateRoomPressed: () => context.push(
-                    CreateRoomPage(playerName: nameController.text),
+                    CreateRoomPage(
+                      playerName: nameController.text,
+                      playerAvatar: playerAvatar,
+                    ),
                   ),
                   onJoinRoomPressed: () => context.push(
-                    JoinRoomPage(playerName: nameController.text),
+                    JoinRoomPage(
+                      playerName: nameController.text,
+                      playerAvatar: playerAvatar,
+                    ),
                   ),
                 ),
                 //? maybe

@@ -7,11 +7,13 @@ main:
     ✔ make logo like squareo @done(25-02-01 00:11)
     ✔ animate images @done(25-02-01 00:11)
     ✔ make global appbar @done(25-02-01 00:11)
-    ☐ check on all cahced images loading with values and sized box as error
-    ☐ make note for icon change
-    ☐ fix web icon
-    ☐ join room ui
-    ☐ move images to server
+    ✔ check on all cahced images loading with values and sized box as error @started(25-02-03 18:37) @done(25-02-04 04:08) @lasted(9h31m5s)
+    ✔ make note for icon change @done(25-02-04 04:08)
+    ✔ fix web icon @done(25-02-04 04:08)
+    ✔ join room ui @done(25-02-04 04:08)
+    ✔ move images to server @done(25-02-04 04:08)
+    ☐ max player count should be either in db or passed on room creation
+    ☐ test on mobile/web
     ☐ check the comebacks
     ☐ fix player remove
     ☐ points

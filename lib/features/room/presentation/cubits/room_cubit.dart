@@ -22,13 +22,22 @@ class RoomCubit extends Cubit<RoomStates> {
 
   RoomCubit({required this.roomRepo}) : super(RoomInitial());
 
-  Future<String> createRoom(
-      String playerName, int roundsCount, int playersCount) async {
+  Future<String> createRoom({
+    required String playerName,
+    required int playerAvatar,
+    required int roundsCount,
+    required int playersCount,
+  }) async {
     emit(RoomLoading());
 
     try {
       final roomId = await roomRepo.createRoom(
-          deviceId, playerName, generateGames(roundsCount));
+        deviceId: deviceId,
+        playerName: playerName,
+        playerAvatar: playerAvatar,
+        games: generateGames(roundsCount),
+      );
+
       emit(RoomCreated(roomId));
       return roomId;
     } catch (e) {
@@ -72,11 +81,20 @@ class RoomCubit extends Cubit<RoomStates> {
     return games;
   }
 
-  Future<bool> joinRoom(String roomId, String playerName) async {
+  Future<bool> joinRoom({
+    required String roomId,
+    required String playerName,
+    required int playerAvatar,
+  }) async {
     emit(RoomLoading());
 
     try {
-      final isJoined = await roomRepo.joinRoom(roomId, deviceId, playerName);
+      final isJoined = await roomRepo.joinRoom(
+        roomId: roomId,
+        deviceId: deviceId,
+        playerName: playerName,
+        playerAvatar: playerAvatar,
+      );
       if (!isJoined) {
         emit(RoomError('Room not found'));
         return false;
@@ -177,6 +195,8 @@ class RoomCubit extends Cubit<RoomStates> {
   }
 
   Future<void> startGame(String roomId) async {
+    emit(RoomLoading());
+    await Future.delayed(Duration(seconds: 1));
     try {
       await roomRepo.startGame(roomId);
     } catch (e) {

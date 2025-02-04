@@ -2,8 +2,8 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:rapid_rounds/config/utils/global_colors.dart';
 import 'package:rapid_rounds/config/utils/global_loading.dart';
+import 'package:rapid_rounds/config/utils/pop_button.dart';
 import 'package:rapid_rounds/config/utils/shadows.dart';
-import 'package:rapid_rounds/features/home/presentation/components/home_button.dart';
 
 class AboutContainer extends StatelessWidget {
   const AboutContainer({
@@ -63,16 +63,16 @@ class AboutContainer extends StatelessWidget {
                   children: [
                     SizedBox(
                       width: 150,
-                      child: HomeButton(
-                        onPressed: () {},
+                      child: PopButton(
+                        onTap: () {},
                         icon: Icons.info_outline_rounded,
                         text: 'About',
                       ),
                     ),
                     SizedBox(
                       width: 150,
-                      child: HomeButton(
-                        onPressed: () {},
+                      child: PopButton(
+                        onTap: () {},
                         icon: Icons.person,
                         text: 'Contact',
                       ),

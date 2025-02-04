@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:neopop/neopop.dart';
 import 'package:rapid_rounds/config/extensions/build_context_extension.dart';
 import 'package:rapid_rounds/config/utils/custom_icons.dart';
 import 'package:rapid_rounds/config/utils/global_colors.dart';
+import 'package:rapid_rounds/config/utils/pop_button.dart';
 
 class MainMenuSubAppbar extends StatelessWidget implements PreferredSizeWidget {
   final String text;
@@ -43,30 +43,17 @@ class MainMenuSubAppbar extends StatelessWidget implements PreferredSizeWidget {
         ),
         leading: Padding(
           padding: const EdgeInsets.all(8.0),
-          child: NeoPopButton(
-            onTapUp: () => context.pop(),
-            color: GColors.gray,
-            child: Icon(
-              Custom.arrow_small_left,
-              color: GColors.black,
-              size: 25,
-            ),
+          child: PopButton.icon(
+            onTap: () => context.pop(),
+            icon: Custom.arrow_small_left,
           ),
         ),
         actions: [
           Padding(
             padding: const EdgeInsets.all(8),
-            child: NeoPopButton(
-              onTapUp: () {},
-              color: GColors.gray,
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Icon(
-                  Icons.report_problem_outlined,
-                  color: GColors.black,
-                  size: 25,
-                ),
-              ),
+            child: PopButton.icon(
+              onTap: () {},
+              icon: Icons.more_vert_rounded,
             ),
           ),
         ],

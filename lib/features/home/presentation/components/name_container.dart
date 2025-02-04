@@ -1,26 +1,24 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:rapid_rounds/config/enums/avatars.dart';
+import 'package:rapid_rounds/config/utils/background_image.dart';
 import 'package:rapid_rounds/config/utils/constants.dart';
 import 'package:rapid_rounds/config/utils/custom_icons.dart';
 import 'package:rapid_rounds/config/utils/global_colors.dart';
+import 'package:rapid_rounds/config/utils/pop_button.dart';
 import 'package:rapid_rounds/features/home/domain/models/widget_position.dart';
-import 'package:rapid_rounds/features/home/presentation/components/home_button.dart';
 
 class NameContainer extends StatelessWidget {
   final WidgetPosition widgetPosition;
   final TextEditingController nameController;
   final int avatarIndex;
-  final VoidCallback? onNext;
-  final VoidCallback? onBack;
+  final void Function()? onPressed;
 
   const NameContainer({
     super.key,
     required this.nameController,
     required this.widgetPosition,
     required this.avatarIndex,
-    this.onNext,
-    this.onBack,
+    this.onPressed,
   });
 
   @override
@@ -37,22 +35,17 @@ class NameContainer extends StatelessWidget {
         height: 250,
         decoration: BoxDecoration(
           color: GColors.gray,
-          borderRadius: BorderRadius.circular(Constants.outterRadius),
-          // boxShadow: Shadows.elevation(),
+          borderRadius: BorderRadius.circular(kOutterRadius),
         ),
         child: Stack(
           children: [
-            Positioned(
-              right: -23,
+            BackgroundImage(
               bottom: -30,
-              child: CachedNetworkImage(
-                imageUrl: 'https://i.ibb.co/mWJHQ0X/mon3.png',
-                width: 200,
-                height: 250,
-                fit: BoxFit.contain,
-              ),
+              right: -23,
+              width: 200,
+              height: 250,
+              imageUrl: 'https://i.ibb.co/mWJHQ0X/mon3.png',
             ),
-
             // Text
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -98,90 +91,9 @@ class NameContainer extends StatelessWidget {
               bottom: 16,
               left: 0,
               right: widgetPosition.right,
-              top: null,
-              child: HomeButton(
-                onPressed: () async {
-                  final selectedAvatarIndex = await showDialog<int>(
-                    context: context,
-                    builder: (context) {
-                      int currentAvatarIndex =
-                          avatarIndex; // Local state inside the dialog
-
-                      return StatefulBuilder(
-                        builder: (context, setState) => AlertDialog(
-                          content: SizedBox(
-                            width: 250,
-                            height: 250,
-                            child: Column(
-                              children: [
-                                Text(
-                                  '${currentAvatarIndex + 1}/50',
-                                  style: TextStyle(
-                                    color: GColors.black,
-                                    fontSize: 20,
-                                  ),
-                                ),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceAround,
-                                  children: [
-                                    IconButton(
-                                      icon: Icon(Icons.arrow_back,
-                                          color: GColors.black),
-                                      onPressed: () {
-                                        setState(() {
-                                          currentAvatarIndex =
-                                              (currentAvatarIndex -
-                                                      1 +
-                                                      AvatarIcon
-                                                          .values.length) %
-                                                  AvatarIcon.values.length;
-                                        });
-                                        if (onBack != null) onBack!();
-                                      },
-                                    ),
-                                    Icon(
-                                      AvatarIcon
-                                          .values[currentAvatarIndex].icon,
-                                      color: GColors.black,
-                                      size: 25,
-                                    ),
-                                    IconButton(
-                                      icon: Icon(Icons.arrow_forward,
-                                          color: GColors.black),
-                                      onPressed: () {
-                                        setState(() {
-                                          currentAvatarIndex =
-                                              (currentAvatarIndex + 1) %
-                                                  AvatarIcon.values.length;
-                                        });
-                                        if (onNext != null) onNext!();
-                                      },
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ),
-                          actions: [
-                            TextButton(
-                              onPressed: () => Navigator.pop(context,
-                                  currentAvatarIndex), // Return the selected index
-                              child: Text('Save'),
-                            ),
-                          ],
-                        ),
-                      );
-                    },
-                  );
-
-                  // Update the parent's state with the selected avatar index
-                  if (selectedAvatarIndex != null) {
-                    onNext?.call();
-                    onBack?.call();
-                  }
-                },
-                icon: Custom.user_moustache,
+              child: PopButton(
+                onTap: onPressed,
+                icon: Custom.user_astronaut,
                 backgroundColor: GColors.black,
                 text: 'Choose Avatar',
               ),

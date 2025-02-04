@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:neopop/widgets/buttons/neopop_button/neopop_button.dart';
-import 'package:rapid_rounds/config/utils/constants.dart';
 import 'package:rapid_rounds/config/utils/global_colors.dart';
+import 'package:rapid_rounds/config/utils/pop_button.dart';
 
 class CreateRoomCounterRow extends StatelessWidget {
   final String text;
@@ -22,13 +21,7 @@ class CreateRoomCounterRow extends StatelessWidget {
   Widget build(BuildContext context) {
     return FittedBox(
       fit: BoxFit.scaleDown,
-      child: Container(
-        decoration: BoxDecoration(
-          color: GColors.springWood.withValues(alpha: 0.8),
-          borderRadius: BorderRadius.circular(
-            Constants.outterRadius,
-          ),
-        ),
+      child: Padding(
         padding: EdgeInsets.all(12),
         child: Row(
           children: [
@@ -41,42 +34,17 @@ class CreateRoomCounterRow extends StatelessWidget {
               ),
             ),
             SizedBox(width: 10),
-            NeoPopButton(
-              onTapUp: onIncrement,
-              color: GColors.gray,
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Icon(
-                  Icons.add,
-                  color: GColors.black,
-                ),
-              ),
+            PopButton.icon(
+              onTap: onIncrement,
+              icon: Icons.add,
             ),
-            NeoPopButton(
-              disabledColor: GColors.gray,
-              color: GColors.gray,
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  counter.toString(),
-                  style: TextStyle(
-                    color: GColors.black,
-                    fontSize: 17,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
+            PopButton.text(
+              text: counter.toString(),
+              fontWeight: FontWeight.bold,
             ),
-            NeoPopButton(
-              onTapUp: onDecrement,
-              color: GColors.gray,
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Icon(
-                  Icons.remove,
-                  color: GColors.black,
-                ),
-              ),
+            PopButton.icon(
+              onTap: onDecrement,
+              icon: Icons.remove,
             ),
           ],
         ),

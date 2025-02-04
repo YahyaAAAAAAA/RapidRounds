@@ -1,9 +1,9 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:neopop/widgets/buttons/neopop_tilted_button/neopop_tilted_button.dart';
 import 'package:rapid_rounds/config/extensions/build_context_extension.dart';
 import 'package:rapid_rounds/config/utils/app_scaffold.dart';
+import 'package:rapid_rounds/config/utils/background_image.dart';
 import 'package:rapid_rounds/config/utils/constants.dart';
 import 'package:rapid_rounds/config/utils/custom_icons.dart';
 import 'package:rapid_rounds/config/utils/global_colors.dart';
@@ -15,10 +15,12 @@ import 'room_page.dart';
 
 class JoinRoomPage extends StatefulWidget {
   final String playerName;
+  final int playerAvatar;
 
   const JoinRoomPage({
     super.key,
     required this.playerName,
+    required this.playerAvatar,
   });
 
   @override
@@ -56,7 +58,7 @@ class _JoinRoomPageState extends State<JoinRoomPage> {
         child: Center(
           child: ConstrainedBox(
             constraints: BoxConstraints(
-              maxWidth: Constants.listViewWidth,
+              maxWidth: kListViewWidth,
             ),
             child: ListView(
               shrinkWrap: true,
@@ -74,35 +76,23 @@ class _JoinRoomPageState extends State<JoinRoomPage> {
                     height: 400,
                     decoration: BoxDecoration(
                       color: GColors.gray,
-                      borderRadius:
-                          BorderRadius.circular(Constants.outterRadius),
+                      borderRadius: BorderRadius.circular(kOutterRadius),
                     ),
                     child: Stack(
                       children: [
-                        Positioned(
+                        BackgroundImage(
+                          imageUrl: 'https://i.ibb.co/v4K52ZTk/mon7.png',
                           top: 30,
                           right: 30,
-                          child: CachedNetworkImage(
-                            imageUrl: 'https://i.ibb.co/v4K52ZTk/mon7.png',
-                            progressIndicatorBuilder:
-                                (context, url, progress) => GLoading(),
-                            width: 250,
-                            height: 400,
-                            fit: BoxFit.contain,
-                          ),
+                          width: 250,
+                          height: 400,
                         ),
-                        Positioned(
+                        BackgroundImage(
                           top: 15,
                           right: -10,
-                          child: CachedNetworkImage(
-                            imageUrl: 'https://i.ibb.co/wFMcr59t/mon8.png',
-                            progressIndicatorBuilder:
-                                (context, url, progress) => GLoading(),
-                            errorWidget: (context, url, error) => GLoading(),
-                            width: 100,
-                            height: 100,
-                            fit: BoxFit.contain,
-                          ),
+                          imageUrl: 'https://i.ibb.co/wFMcr59t/mon8.png',
+                          width: 100,
+                          height: 100,
                         ),
                         BlocBuilder<RoomCubit, RoomStates>(
                             builder: (context, state) {
@@ -122,7 +112,10 @@ class _JoinRoomPageState extends State<JoinRoomPage> {
                                   }
 
                                   final success = await roomCubit.joinRoom(
-                                      roomId, widget.playerName);
+                                    roomId: roomId,
+                                    playerName: widget.playerName,
+                                    playerAvatar: widget.playerAvatar,
+                                  );
 
                                   if (!mounted) return;
 
@@ -234,21 +227,3 @@ class _JoinRoomPageState extends State<JoinRoomPage> {
     );
   }
 }
-
-
-//  ElevatedButton(
-//                 onPressed: () async {
-//                   final roomId = roomCodeController.text.trim();
-//                   final success =
-//                       await roomCubit.joinRoom(roomId, widget.playerName);
-
-//                   if (!mounted) return;
-
-//                   if (success) {
-//                     navigateToRoom(roomId);
-//                   } else {
-//                     showErrorMessage();
-//                   }
-//                 },
-//                 child: const Text('Join'),
-//               ),

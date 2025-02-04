@@ -20,9 +20,7 @@ class GameListItem extends StatelessWidget {
         width: 150,
         decoration: BoxDecoration(
           color: GColors.gray,
-          borderRadius: BorderRadius.circular(
-            Constants.innerRadius,
-          ),
+          borderRadius: BorderRadius.circular(kInnerRadius),
         ),
         child: Padding(
           padding: const EdgeInsets.all(8),

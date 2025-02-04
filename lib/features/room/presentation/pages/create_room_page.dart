@@ -1,9 +1,9 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:neopop/widgets/buttons/neopop_tilted_button/neopop_tilted_button.dart';
 import 'package:rapid_rounds/config/extensions/build_context_extension.dart';
 import 'package:rapid_rounds/config/utils/app_scaffold.dart';
+import 'package:rapid_rounds/config/utils/background_image.dart';
 import 'package:rapid_rounds/config/utils/constants.dart';
 import 'package:rapid_rounds/config/utils/custom_icons.dart';
 import 'package:rapid_rounds/config/utils/global_colors.dart';
@@ -22,10 +22,12 @@ import 'room_page.dart';
 
 class CreateRoomPage extends StatefulWidget {
   final String playerName;
+  final int playerAvatar;
 
   const CreateRoomPage({
     super.key,
     required this.playerName,
+    required this.playerAvatar,
   });
 
   @override
@@ -75,9 +77,10 @@ class _CreateRoomPageState extends State<CreateRoomPage> {
   Future<void> createRoom() async {
     //create room
     final roomId = await roomCubit.createRoom(
-      widget.playerName,
-      roundsCount,
-      playersCount,
+      playerName: widget.playerName,
+      playerAvatar: widget.playerAvatar,
+      roundsCount: roundsCount,
+      playersCount: playersCount,
     );
 
     //ensure mounted
@@ -95,7 +98,7 @@ class _CreateRoomPageState extends State<CreateRoomPage> {
           child: Center(
             child: ConstrainedBox(
               constraints: BoxConstraints(
-                maxWidth: Constants.listViewWidth,
+                maxWidth: kListViewWidth,
               ),
               child: ListView(
                 shrinkWrap: true,
@@ -105,68 +108,38 @@ class _CreateRoomPageState extends State<CreateRoomPage> {
                     fit: BoxFit.scaleDown,
                     child: Container(
                       width: 400,
-                      height: 560,
+                      height: 580,
                       decoration: BoxDecoration(
                         color: GColors.gray,
-                        borderRadius:
-                            BorderRadius.circular(Constants.outterRadius),
+                        borderRadius: BorderRadius.circular(kOutterRadius),
                       ),
                       child: Stack(
                         children: [
                           //* images
-                          Positioned(
+                          BackgroundImage(
                             left: 80,
                             bottom: 10,
-                            child: CachedNetworkImage(
-                              imageUrl: 'https://i.ibb.co/mCd0rWrr/mon9.png',
-                              progressIndicatorBuilder:
-                                  (context, url, progress) => GLoading(
-                                value: progress.progress,
-                              ),
-                              errorWidget: (context, url, error) => SizedBox(),
-                              fit: BoxFit.contain,
-                              width: 400,
-                              height: 500,
-                            ),
+                            width: 400,
+                            height: 500,
+                            imageUrl: 'https://i.ibb.co/mCd0rWrr/mon9.png',
                           ),
-                          Positioned(
+                          BackgroundImage(
                             right: 30,
                             top: -30,
-                            child: Transform.rotate(
-                              angle: 10,
-                              child: CachedNetworkImage(
-                                imageUrl: 'https://i.ibb.co/ynpK52vD/mon11.png',
-                                progressIndicatorBuilder:
-                                    (context, url, progress) => GLoading(
-                                  value: progress.progress,
-                                ),
-                                errorWidget: (context, url, error) =>
-                                    SizedBox(),
-                                fit: BoxFit.contain,
-                                width: 100,
-                                height: 100,
-                              ),
-                            ),
+                            angle: 10,
+                            width: 100,
+                            height: 100,
+                            imageUrl: 'https://i.ibb.co/ynpK52vD/mon11.png',
                           ),
-                          Positioned(
+                          BackgroundImage(
                             left: -40,
                             bottom: 50,
-                            child: Transform.rotate(
-                              angle: 26,
-                              child: CachedNetworkImage(
-                                imageUrl: 'https://i.ibb.co/whPQYRQC/mon10.png',
-                                progressIndicatorBuilder:
-                                    (context, url, progress) => GLoading(
-                                  value: progress.progress,
-                                ),
-                                errorWidget: (context, url, error) =>
-                                    SizedBox(),
-                                fit: BoxFit.contain,
-                                width: 150,
-                                height: 150,
-                              ),
-                            ),
+                            angle: 26,
+                            width: 150,
+                            height: 150,
+                            imageUrl: 'https://i.ibb.co/whPQYRQC/mon10.png',
                           ),
+
                           //* fields
                           Padding(
                             padding: const EdgeInsets.all(12),
@@ -182,60 +155,81 @@ class _CreateRoomPageState extends State<CreateRoomPage> {
                                     fontFamily: 'Barr',
                                   ),
                                 ),
-                                CreateRoomCounterRow(
-                                  text: 'Rounds Count',
-                                  counter: roundsCount,
-                                  onIncrement: () {
-                                    if (roundsCount >= maxRoundsCount) {
-                                      return;
-                                    }
+                                FittedBox(
+                                  fit: BoxFit.scaleDown,
+                                  child: Container(
+                                    padding: const EdgeInsets.all(12),
+                                    decoration: BoxDecoration(
+                                      color: GColors.springWood
+                                          .withValues(alpha: 0.8),
+                                      borderRadius:
+                                          BorderRadius.circular(kOutterRadius),
+                                    ),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      spacing: 20,
+                                      children: [
+                                        CreateRoomCounterRow(
+                                          text: 'Rounds Count',
+                                          counter: roundsCount,
+                                          onIncrement: () {
+                                            if (roundsCount >= maxRoundsCount) {
+                                              return;
+                                            }
 
-                                    setState(() => roundsCount++);
-                                  },
-                                  onDecrement: () {
-                                    if (roundsCount <= minRoundsCount) {
-                                      return;
-                                    }
+                                            setState(() => roundsCount++);
+                                          },
+                                          onDecrement: () {
+                                            if (roundsCount <= minRoundsCount) {
+                                              return;
+                                            }
 
-                                    setState(() => roundsCount--);
-                                  },
-                                ),
-                                CreateRoomCounterRow(
-                                  text: 'Players Count',
-                                  counter: playersCount,
-                                  onIncrement: () {
-                                    if (playersCount >= maxPlayersCount) {
-                                      return;
-                                    }
+                                            setState(() => roundsCount--);
+                                          },
+                                        ),
+                                        CreateRoomCounterRow(
+                                          text: 'Players Count',
+                                          counter: playersCount,
+                                          onIncrement: () {
+                                            if (playersCount >=
+                                                maxPlayersCount) {
+                                              return;
+                                            }
 
-                                    setState(() => playersCount++);
-                                  },
-                                  onDecrement: () {
-                                    if (playersCount <= minPlayersCount) {
-                                      return;
-                                    }
+                                            setState(() => playersCount++);
+                                          },
+                                          onDecrement: () {
+                                            if (playersCount <=
+                                                minPlayersCount) {
+                                              return;
+                                            }
 
-                                    setState(() => playersCount--);
-                                  },
-                                ),
-                                AvailableGamesRow(
-                                  onTapUp: () => setState(
-                                    () => gamesShown = !gamesShown,
+                                            setState(() => playersCount--);
+                                          },
+                                        ),
+                                        AvailableGamesRow(
+                                          onTapUp: () => setState(
+                                            () => gamesShown = !gamesShown,
+                                          ),
+                                          gamesShown: gamesShown,
+                                        ),
+                                        GamesList(
+                                          gamesShown: gamesShown,
+                                          games: games,
+                                          itemBuilder: (context, index) {
+                                            return GameListItem(
+                                              game: games[index],
+                                              onChanged: (value) => setState(
+                                                () => games[index].enabled =
+                                                    !games[index].enabled!,
+                                              ),
+                                            );
+                                          },
+                                        ),
+                                      ],
+                                    ),
                                   ),
-                                  gamesShown: gamesShown,
-                                ),
-                                GamesList(
-                                  gamesShown: gamesShown,
-                                  games: games,
-                                  itemBuilder: (context, index) {
-                                    return GameListItem(
-                                      game: games[index],
-                                      onChanged: (value) => setState(
-                                        () => games[index].enabled =
-                                            !games[index].enabled!,
-                                      ),
-                                    );
-                                  },
                                 ),
                               ],
                             ),

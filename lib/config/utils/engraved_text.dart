@@ -23,7 +23,7 @@ class NeumorphicText extends StatelessWidget {
               ..color = Colors.white,
             shadows: [
               Shadow(
-                color: Colors.white.withOpacity(0.8),
+                color: Colors.white.withValues(alpha: 0.8),
                 offset: const Offset(-2, -2),
                 blurRadius: 4,
               ),

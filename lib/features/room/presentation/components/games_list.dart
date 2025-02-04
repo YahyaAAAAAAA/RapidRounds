@@ -2,20 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:rapid_rounds/config/utils/constants.dart';
 import 'package:rapid_rounds/config/utils/global_colors.dart';
 import 'package:rapid_rounds/features/games/game.dart';
-import 'package:rapid_rounds/features/room/presentation/components/horizontal_listview.dart';
+import 'package:rapid_rounds/config/utils/smooth_listview.dart';
 
 class GamesList extends StatelessWidget {
-  final void Function(bool)? onChanged;
   final bool gamesShown;
   final List<Game> games;
-  final Widget? Function(BuildContext, int) itemBuilder;
+  final Widget Function(BuildContext, int) itemBuilder;
 
   const GamesList({
     super.key,
     required this.gamesShown,
     required this.games,
     required this.itemBuilder,
-    this.onChanged,
   });
 
   @override
@@ -26,16 +24,18 @@ class GamesList extends StatelessWidget {
       height: gamesShown ? 140 : 0,
       width: 250,
       decoration: BoxDecoration(
-        color: GColors.springWood.withValues(alpha: 0.8),
+        color: GColors.transparent,
         borderRadius: BorderRadius.circular(
-          Constants.outterRadius,
+          kOutterRadius,
         ),
       ),
       padding: EdgeInsets.all(12),
-      child: HorizontalListView(
+      child: SmoothListView(
+        arrowsHeight: 120,
         itemCount: games.length,
-        arrowsHeight: 110,
+        scrollDirection: Axis.horizontal,
         itemBuilder: itemBuilder,
+        separatorBuilder: (context, index) => SizedBox(width: 8),
       ),
     );
   }

@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:mesh_gradient/mesh_gradient.dart';
 
 class GColors {
-  static Color springWood = Color(0xFFf5f4ed);
-  static Color sunGlow = Color(0xFFffc62f);
-  static Color black = const Color(0xFF1A1110);
-  static Color white = Colors.white;
-  static Color gray = Color(0xFFeae7da);
-  static Color transparent = Colors.transparent;
+  static const Color springWood = Color(0xFFf5f4ed);
+  static const Color sunGlow = Color(0xFFffc62f);
+  static const Color black = Color(0xFF1A1110);
+  static const Color white = Colors.white;
+  static const Color gray = Color(0xFFeae7da);
+  static const Color transparent = Colors.transparent;
 
   static Color scaffoldBg = springWood;
   static Color appBarBg = Colors.transparent;
