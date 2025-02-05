@@ -12,6 +12,7 @@ class AppScaffold extends StatelessWidget {
   final String backgroundImage;
   final double? opacity;
   final List<MeshGradientPoint>? points;
+  final Widget? bottomSheet;
 
   const AppScaffold({
     super.key,
@@ -23,6 +24,7 @@ class AppScaffold extends StatelessWidget {
     this.bottomNavigationBar,
     this.opacity,
     this.points,
+    this.bottomSheet,
   });
 
   @override
@@ -30,6 +32,7 @@ class AppScaffold extends StatelessWidget {
     return Scaffold(
       appBar: appBar,
       extendBodyBehindAppBar: true,
+      bottomSheet: bottomSheet,
       body: MeshGradient(
         options: MeshGradientOptions(
           noiseIntensity: 0,

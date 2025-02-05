@@ -18,6 +18,7 @@ class RoomWaiting extends RoomStates {
 
 class RoomInGame extends RoomStates {
   final RoomWithPlayers roomWithPlayers;
+
   RoomInGame(this.roomWithPlayers);
 }
 

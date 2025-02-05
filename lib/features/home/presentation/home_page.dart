@@ -2,6 +2,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:rapid_rounds/config/enums/avatars.dart';
 import 'package:rapid_rounds/config/extensions/build_context_extension.dart';
+import 'package:rapid_rounds/config/utils/global_dialog.dart';
 import 'package:rapid_rounds/config/utils/app_scaffold.dart';
 import 'package:rapid_rounds/config/utils/constants.dart';
 import 'package:rapid_rounds/config/utils/global_colors.dart';
@@ -72,9 +73,10 @@ class _HomePageState extends State<HomePage> {
                   nameController: nameController,
                   widgetPosition: buttonsPosition,
                   avatarIndex: playerAvatar,
-                  onPressed: () => showDialog(
+                  onPressed: () => dialog(
                     context: context,
-                    builder: (context) => StatefulBuilder(
+                    pageBuilder: (context, animation, secondaryAnimation) =>
+                        StatefulBuilder(
                       builder: (context, dialogState) => AvatarSelectorDialog(
                         avatarIndex: playerAvatar,
                         onRandom: () => dialogState(() => setState(() =>

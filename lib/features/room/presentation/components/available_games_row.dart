@@ -31,7 +31,7 @@ class AvailableGamesRow extends StatelessWidget {
             ),
             SizedBox(width: 10),
             PopButton.icon(
-              onTap: onTapUp,
+              onTapUp: onTapUp,
               padding: const EdgeInsets.all(4),
               icon:
                   gamesShown ? Custom.arrow_small_up : Custom.arrow_small_down,

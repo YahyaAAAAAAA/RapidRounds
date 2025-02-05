@@ -42,7 +42,9 @@ class _CreateRoomPageState extends State<CreateRoomPage> {
   final int maxPlayersCount = 10;
   final int minPlayersCount = 1;
   int roundsCount = 5;
+  int oldRoundsCount = 5;
   int playersCount = 3;
+  int oldPlayersCount = 3;
 
   bool gamesShown = false;
   //todo comeback
@@ -173,11 +175,13 @@ class _CreateRoomPageState extends State<CreateRoomPage> {
                                         CreateRoomCounterRow(
                                           text: 'Rounds Count',
                                           counter: roundsCount,
+                                          oldCounter: oldRoundsCount,
                                           onIncrement: () {
                                             if (roundsCount >= maxRoundsCount) {
                                               return;
                                             }
 
+                                            oldRoundsCount = roundsCount;
                                             setState(() => roundsCount++);
                                           },
                                           onDecrement: () {
@@ -185,18 +189,20 @@ class _CreateRoomPageState extends State<CreateRoomPage> {
                                               return;
                                             }
 
+                                            oldRoundsCount = roundsCount;
                                             setState(() => roundsCount--);
                                           },
                                         ),
                                         CreateRoomCounterRow(
                                           text: 'Players Count',
                                           counter: playersCount,
+                                          oldCounter: oldPlayersCount,
                                           onIncrement: () {
                                             if (playersCount >=
                                                 maxPlayersCount) {
                                               return;
                                             }
-
+                                            oldPlayersCount = playersCount;
                                             setState(() => playersCount++);
                                           },
                                           onDecrement: () {
@@ -205,6 +211,7 @@ class _CreateRoomPageState extends State<CreateRoomPage> {
                                               return;
                                             }
 
+                                            oldPlayersCount = playersCount;
                                             setState(() => playersCount--);
                                           },
                                         ),

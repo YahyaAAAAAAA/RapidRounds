@@ -46,7 +46,7 @@ class AvatarSelectorDialog extends StatelessWidget {
                     ),
                   ),
                   PopButton.icon(
-                    onTap: () => context.pop(),
+                    onTapUp: () => context.pop(),
                     icon: Icons.clear,
                     iconSize: 15,
                     padding: EdgeInsets.all(2),
@@ -76,17 +76,16 @@ class AvatarSelectorDialog extends StatelessWidget {
                     backgroundColor: GColors.gray,
                     padding: EdgeInsets.all(14),
                     //todo not sure?
-                    onTap: () => context.pop(),
+                    onTapUp: () => context.pop(),
                     child: AnimatedSwitcher(
                       duration: Duration(milliseconds: 300),
                       transitionBuilder:
                           (Widget child, Animation<double> animation) {
-                        // Slide transition for the outgoing widget (to the right)
                         if (child.key == ValueKey<int>(avatarIndex)) {
                           return SlideTransition(
                             position: Tween<Offset>(
-                              begin: Offset(1.0, 0.3), // Start from the center
-                              end: Offset.zero, // Slide to the right
+                              begin: Offset(1.0, 0.3),
+                              end: Offset.zero,
                             ).animate(animation),
                             child: FadeTransition(
                                 opacity: Tween<double>(begin: 0, end: 1)
@@ -94,11 +93,10 @@ class AvatarSelectorDialog extends StatelessWidget {
                                 child: child),
                           );
                         } else {
-                          // Slide transition for the incoming widget (from the left)
                           return SlideTransition(
                             position: Tween<Offset>(
-                              begin: Offset(-1.5, 0.1), // Start from the left
-                              end: Offset.zero, // Slide to the center
+                              begin: Offset(-1.5, 0.1),
+                              end: Offset.zero,
                             ).animate(animation),
                             child: FadeTransition(
                                 opacity: Tween<double>(begin: 0, end: 1)
@@ -120,12 +118,12 @@ class AvatarSelectorDialog extends StatelessWidget {
                     children: [
                       PopButton.icon(
                         icon: Custom.arrow_small_right,
-                        onTap: onNext,
+                        onTapUp: onNext,
                       ),
                       PopButton.icon(
                         //todo change (more thick)
                         icon: Custom.shuffle,
-                        onTap: onRandom,
+                        onTapUp: onRandom,
                       ),
                     ],
                   ),

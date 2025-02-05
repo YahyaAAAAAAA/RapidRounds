@@ -4,6 +4,8 @@ import 'package:rapid_rounds/config/utils/animated_color_icon.dart';
 import 'package:rapid_rounds/config/utils/custom_icons.dart';
 import 'package:rapid_rounds/config/utils/global_colors.dart';
 import 'package:rapid_rounds/config/utils/pop_button.dart';
+import 'package:rapid_rounds/features/games/match%20color/color_match.dart';
+import 'package:rapid_rounds/features/games/match%20color/color_match_widget.dart';
 
 class MainMenuAppbar extends StatelessWidget implements PreferredSizeWidget {
   const MainMenuAppbar({
@@ -50,7 +52,16 @@ class MainMenuAppbar extends StatelessWidget implements PreferredSizeWidget {
         leading: Padding(
           padding: const EdgeInsets.all(8.0),
           child: PopButton.icon(
-            onTap: () => context.pop(),
+            onTapUp: () => context.push(
+              ColorMatchWidget(
+                colorMatch: ColorMatch(
+                  id: '0',
+                  type: 'ColorMatch',
+                  roomId: '0',
+                  pattern: 0,
+                ),
+              ),
+            ),
             icon: Custom.bars_staggered,
           ),
         ),
@@ -58,7 +69,7 @@ class MainMenuAppbar extends StatelessWidget implements PreferredSizeWidget {
           Padding(
             padding: const EdgeInsets.all(8),
             child: PopButton.icon(
-              onTap: () {},
+              onTapUp: () {},
               icon: Custom.settings,
             ),
           ),

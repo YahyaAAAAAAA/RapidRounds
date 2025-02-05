@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:rapid_rounds/config/utils/animated_counter_text.dart';
 import 'package:rapid_rounds/config/utils/global_colors.dart';
 import 'package:rapid_rounds/config/utils/pop_button.dart';
 
 class CreateRoomCounterRow extends StatelessWidget {
   final String text;
   final int counter;
+  final int oldCounter;
 
   final void Function()? onIncrement;
   final void Function()? onDecrement;
@@ -13,6 +15,7 @@ class CreateRoomCounterRow extends StatelessWidget {
     super.key,
     required this.text,
     required this.counter,
+    required this.oldCounter,
     this.onIncrement,
     this.onDecrement,
   });
@@ -35,15 +38,24 @@ class CreateRoomCounterRow extends StatelessWidget {
             ),
             SizedBox(width: 10),
             PopButton.icon(
-              onTap: onIncrement,
+              onTapUp: onIncrement,
               icon: Icons.add,
             ),
-            PopButton.text(
-              text: counter.toString(),
-              fontWeight: FontWeight.bold,
+            PopButton.child(
+              backgroundColor: GColors.gray,
+              padding: EdgeInsets.all(8),
+              child: AnimatedCounterText(
+                counter: counter,
+                oldCounter: oldCounter,
+                style: TextStyle(
+                  color: GColors.black,
+                  fontSize: 17,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
             ),
             PopButton.icon(
-              onTap: onDecrement,
+              onTapUp: onDecrement,
               icon: Icons.remove,
             ),
           ],

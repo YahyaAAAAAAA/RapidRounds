@@ -92,7 +92,7 @@ class NameContainer extends StatelessWidget {
               left: 0,
               right: widgetPosition.right,
               child: PopButton(
-                onTap: onPressed,
+                onTapUp: onPressed,
                 icon: Custom.user_astronaut,
                 backgroundColor: GColors.black,
                 text: 'Choose Avatar',

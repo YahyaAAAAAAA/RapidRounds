@@ -64,7 +64,7 @@ class AboutContainer extends StatelessWidget {
                     SizedBox(
                       width: 150,
                       child: PopButton(
-                        onTap: () {},
+                        onTapUp: () {},
                         icon: Icons.info_outline_rounded,
                         text: 'About',
                       ),
@@ -72,7 +72,7 @@ class AboutContainer extends StatelessWidget {
                     SizedBox(
                       width: 150,
                       child: PopButton(
-                        onTap: () {},
+                        onTapUp: () {},
                         icon: Icons.person,
                         text: 'Contact',
                       ),

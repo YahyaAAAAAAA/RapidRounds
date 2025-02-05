@@ -2,11 +2,14 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:rapid_rounds/config/utils/base_inkwell.dart';
+import 'package:rapid_rounds/config/utils/app_scaffold.dart';
 import 'package:rapid_rounds/config/utils/constants.dart';
-import 'package:rapid_rounds/config/utils/shadows.dart';
+import 'package:rapid_rounds/config/utils/custom_icons.dart';
+import 'package:rapid_rounds/config/utils/global_colors.dart';
+import 'package:rapid_rounds/config/utils/pop_button.dart';
 import 'package:rapid_rounds/features/games/match%20color/color_match.dart';
 import 'package:rapid_rounds/features/games/match%20color/patterns.dart';
+import 'package:rapid_rounds/features/home/presentation/components/main_menu_sub_appbar.dart';
 import 'package:rapid_rounds/features/room/presentation/cubits/room_cubit.dart';
 
 class ColorMatchWidget extends StatefulWidget {
@@ -125,123 +128,137 @@ class _ColorMatchWidgetState extends State<ColorMatchWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: ConstrainedBox(
-        constraints: BoxConstraints(maxWidth: kListViewWidth),
-        child: ListView(
-          shrinkWrap: true,
-          padding: EdgeInsets.all(12),
-          children: [
-            FittedBox(
-              fit: BoxFit.scaleDown,
-              alignment: Alignment.centerLeft,
-              child: Container(
-                padding: EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  boxShadow: Shadows.soft(),
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: Row(
-                  children: [
-                    Icon(
-                      Icons.timelapse_rounded,
-                      color: Colors.black,
-                    ),
-                    Text('  '),
-                    Text(solveTime.toString()),
-                  ],
-                ),
-              ),
-            ),
-            SizedBox(height: 10),
-            Container(
-              padding: EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(20),
-                boxShadow: Shadows.soft(),
-              ),
-              child: GridView.builder(
-                shrinkWrap: true,
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: colorMatch.gridSize,
-                ),
-                itemCount: colorMatch.gridSize * colorMatch.gridSize,
-                itemBuilder: (context, index) {
-                  return Padding(
-                    padding: EdgeInsets.all(8),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(20),
-                      child: BaseInkWell(
-                        onTap: isHidden ? () => onAnswer(index) : null,
-                        child: AnimatedContainer(
-                          duration: Duration(milliseconds: 200),
-                          margin: const EdgeInsets.only(bottom: 2),
-                          decoration: BoxDecoration(
-                            color: currentGridColors[index],
-                            borderRadius: BorderRadius.circular(20),
-                            boxShadow: Shadows.soft(),
-                          ),
-                        ),
-                      ),
-                    ),
-                  );
-                },
-              ),
-            ),
-            SizedBox(height: 10),
-            Row(
+    return AppScaffold(
+      appBar: MainMenuSubAppbar(
+        text: solveTime.toString(),
+        //TODO here
+        bottom: PreferredSize(
+          preferredSize: Size.fromHeight(140),
+          child: Text(
+            solveTime.toString(),
+          ),
+        ),
+      ),
+      body: SafeArea(
+        child: Center(
+          child: ConstrainedBox(
+            constraints: BoxConstraints(maxWidth: kListViewWidth),
+            child: ListView(
+              shrinkWrap: true,
+              padding: EdgeInsets.all(8),
               children: [
-                Icon(
-                  Icons.draw_outlined,
-                  color: Colors.black,
-                )
-              ],
-            ),
-            SizedBox(height: 5),
-            FittedBox(
-              fit: BoxFit.scaleDown,
-              alignment: Alignment.centerLeft,
-              child: Container(
-                padding: EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  boxShadow: Shadows.soft(),
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: List.generate(
-                    paletteColors.length,
-                    (index) => GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          selectedColor = paletteColors[index];
-                        });
-                      },
-                      child: AnimatedContainer(
-                        duration: Duration(milliseconds: 200),
-                        width: 50,
-                        height: 50,
-                        margin: EdgeInsets.all(4),
-                        decoration: BoxDecoration(
-                          color: paletteColors[index],
-                          borderRadius: BorderRadius.circular(50),
-                          border: Border.all(
-                            color: selectedColor == paletteColors[index]
-                                ? Colors.black
-                                : Colors.transparent,
-                            width: 3,
+                Container(
+                  padding: EdgeInsets.all(20),
+                  decoration: BoxDecoration(
+                    color: GColors.gray,
+                    borderRadius: BorderRadius.circular(kOutterRadius),
+                  ),
+                  child: GridView.builder(
+                    shrinkWrap: true,
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: colorMatch.gridSize,
+                    ),
+                    itemCount: colorMatch.gridSize * colorMatch.gridSize,
+                    itemBuilder: (context, index) {
+                      return Padding(
+                        padding: EdgeInsets.all(15),
+                        child: PopButton.child(
+                          onTapUp: isHidden ? () => onAnswer(index) : () {},
+                          backgroundColor: currentGridColors[index],
+                          depth: 5,
+                          child: SizedBox(
+                            width: 20,
+                            height: 20,
                           ),
                         ),
-                      ),
-                    ),
+                      );
+                    },
                   ),
                 ),
-              ),
+                SizedBox(height: 5),
+                FittedBox(
+                  fit: BoxFit.scaleDown,
+                  alignment: Alignment.centerLeft,
+                  child: Row(
+                    children: [
+                      Icon(
+                        Icons.draw_outlined,
+                        color: Colors.black,
+                      )
+                    ],
+                  ),
+                ),
+                FittedBox(
+                  fit: BoxFit.scaleDown,
+                  alignment: Alignment.centerLeft,
+                  child: Row(
+                    children: [
+                      Container(
+                        padding: EdgeInsets.all(12),
+                        decoration: BoxDecoration(
+                          color: GColors.gray,
+                          borderRadius: BorderRadius.circular(kOutterRadius),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          spacing: 15,
+                          children: List.generate(
+                            paletteColors.length,
+                            (index) => PopButton.child(
+                              backgroundColor: paletteColors[index],
+                              onTapUp: () => setState(
+                                  () => selectedColor = paletteColors[index]),
+                              border: Border.all(
+                                color: selectedColor == paletteColors[index]
+                                    ? Colors.black
+                                    : Colors.transparent,
+                                width: 2,
+                              ),
+                              child: SizedBox(
+                                width: 20,
+                                height: 20,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(width: 130),
+                      //* timer
+                      FittedBox(
+                        fit: BoxFit.scaleDown,
+                        alignment: Alignment.centerLeft,
+                        child: Container(
+                          padding: EdgeInsets.all(12),
+                          decoration: BoxDecoration(
+                            color: GColors.gray,
+                            borderRadius: BorderRadius.circular(kOutterRadius),
+                          ),
+                          child: Row(
+                            children: [
+                              Icon(
+                                Custom.duration_alt,
+                                color: Colors.black,
+                                size: 33,
+                              ),
+                              Text('  '),
+                              Text(
+                                solveTime.toString(),
+                                style: TextStyle(
+                                  color: GColors.black,
+                                  fontSize: 35,
+                                  fontFamily: 'Barr',
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ),
-          ],
+          ),
         ),
       ),
     );

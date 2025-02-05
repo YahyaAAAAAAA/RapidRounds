@@ -6,10 +6,12 @@ import 'package:rapid_rounds/config/utils/pop_button.dart';
 
 class MainMenuSubAppbar extends StatelessWidget implements PreferredSizeWidget {
   final String text;
+  final PreferredSize? bottom;
 
   const MainMenuSubAppbar({
     super.key,
     required this.text,
+    this.bottom,
   });
 
   @override
@@ -18,6 +20,7 @@ class MainMenuSubAppbar extends StatelessWidget implements PreferredSizeWidget {
       preferredSize: preferredSize,
       child: AppBar(
         centerTitle: true,
+        bottom: bottom,
         backgroundColor: GColors.gray.withValues(alpha: 0.5),
         title: FittedBox(
           fit: BoxFit.scaleDown,
@@ -44,7 +47,7 @@ class MainMenuSubAppbar extends StatelessWidget implements PreferredSizeWidget {
         leading: Padding(
           padding: const EdgeInsets.all(8.0),
           child: PopButton.icon(
-            onTap: () => context.pop(),
+            onTapUp: () => context.pop(),
             icon: Custom.arrow_small_left,
           ),
         ),
@@ -52,7 +55,7 @@ class MainMenuSubAppbar extends StatelessWidget implements PreferredSizeWidget {
           Padding(
             padding: const EdgeInsets.all(8),
             child: PopButton.icon(
-              onTap: () {},
+              onTapUp: () {},
               icon: Icons.more_vert_rounded,
             ),
           ),

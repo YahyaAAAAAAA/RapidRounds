@@ -12,7 +12,10 @@ enum PopButtonType {
 class PopButton extends StatelessWidget {
   final Color? backgroundColor;
   final EdgeInsetsGeometry? padding;
-  final void Function()? onTap;
+  final double? depth;
+  final void Function()? onTapUp;
+  final void Function()? onTapDown;
+  final Border? border;
 
   final IconData? icon;
   final Color? iconColor;
@@ -30,7 +33,10 @@ class PopButton extends StatelessWidget {
     this.iconSize = 24,
     this.backgroundColor = GColors.black,
     this.padding = const EdgeInsets.all(12),
-    this.onTap,
+    this.depth = 3,
+    this.onTapUp,
+    this.onTapDown,
+    this.border,
   })  : child = null,
         isSelectable = null;
 
@@ -41,7 +47,10 @@ class PopButton extends StatelessWidget {
     this.iconSize = 24,
     this.backgroundColor = GColors.gray,
     this.padding = const EdgeInsets.all(8),
-    this.onTap,
+    this.depth = 3,
+    this.onTapUp,
+    this.onTapDown,
+    this.border,
   })  : text = null,
         textColor = null,
         textSize = null,
@@ -67,7 +76,10 @@ class PopButton extends StatelessWidget {
     this.isSelectable = false,
     this.backgroundColor = GColors.gray,
     this.padding = const EdgeInsets.all(8),
-    this.onTap,
+    this.depth = 3,
+    this.onTapUp,
+    this.onTapDown,
+    this.border,
   })  : icon = null,
         iconColor = null,
         iconSize = null,
@@ -80,7 +92,10 @@ class PopButton extends StatelessWidget {
     required this.child,
     this.backgroundColor = GColors.black,
     this.padding = const EdgeInsets.all(12),
-    this.onTap,
+    this.depth = 3,
+    this.onTapUp,
+    this.onTapDown,
+    this.border,
   })  : text = null,
         textSize = null,
         textColor = null,
@@ -107,9 +122,10 @@ class PopButton extends StatelessWidget {
   Widget build(BuildContext context) {
     if (decide() == PopButtonType.icon) {
       return NeoPopButton(
-        onTapUp: onTap,
+        onTapUp: onTapUp,
         color: backgroundColor!,
         disabledColor: backgroundColor!,
+        depth: depth!,
         child: Padding(
           padding: padding!,
           child: Icon(
@@ -121,9 +137,11 @@ class PopButton extends StatelessWidget {
       );
     } else if (decide() == PopButtonType.text) {
       return NeoPopButton(
-        onTapUp: onTap,
+        onTapUp: onTapUp,
+        onTapDown: onTapDown,
         color: backgroundColor!,
         disabledColor: backgroundColor!,
+        depth: depth!,
         child: Padding(
           padding: padding!,
           child: isSelectable!
@@ -149,18 +167,22 @@ class PopButton extends StatelessWidget {
       );
     } else if (decide() == PopButtonType.child) {
       return NeoPopButton(
-        onTapUp: onTap,
+        onTapUp: onTapUp,
         color: backgroundColor!,
         disabledColor: backgroundColor!,
+        depth: depth!,
+        border: border,
         child: Padding(
           padding: padding!,
           child: child,
         ),
       );
     } else {
+      //normal a text with an icon
       return NeoPopButton(
-        onTapUp: onTap,
+        onTapUp: onTapUp,
         color: backgroundColor!,
+        depth: depth!,
         child: Padding(
           padding: padding!,
           child: Row(

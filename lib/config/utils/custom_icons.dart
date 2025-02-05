@@ -8,6 +8,8 @@ class Custom {
   static const _kFontFam = 'Custom';
   static const String? _kFontPkg = null;
 
+  static const IconData duration =
+      IconData(0xe800, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData bars_staggered =
       IconData(0xe859, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData leave =
@@ -38,6 +40,10 @@ class Custom {
       IconData(0xe867, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData shuffle =
       IconData(0xe868, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData duration_alt =
+      IconData(0xe869, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData progress_complete =
+      IconData(0xe86a, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData down =
       IconData(0xe86b, fontFamily: _kFontFam, fontPackage: _kFontPkg);
 }

@@ -63,7 +63,7 @@ class RoomManageContainer extends StatelessWidget {
               left: 12,
               bottom: 100,
               child: PopButton(
-                onTap: onCreateRoomPressed,
+                onTapUp: onCreateRoomPressed,
                 text: 'Create Room',
                 icon: Custom.magic_wand,
                 backgroundColor: GColors.sunGlow,
@@ -78,7 +78,7 @@ class RoomManageContainer extends StatelessWidget {
               left: 12,
               bottom: 40,
               child: PopButton(
-                onTap: onJoinRoomPressed,
+                onTapUp: onJoinRoomPressed,
                 icon: Custom.leave,
                 text: 'Join Room',
               ),
