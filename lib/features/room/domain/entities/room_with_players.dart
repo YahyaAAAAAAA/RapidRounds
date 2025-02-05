@@ -2,12 +2,12 @@ import 'package:rapid_rounds/features/games/game.dart';
 import 'package:rapid_rounds/features/room/domain/entities/player.dart';
 import 'package:rapid_rounds/features/room/domain/entities/room.dart';
 
-class RoomWithPlayers {
+class RoomDetailed {
   final Room room;
   final List<Player> players;
   final List<Game> games;
 
-  RoomWithPlayers({
+  RoomDetailed({
     required this.room,
     required this.players,
     required this.games,

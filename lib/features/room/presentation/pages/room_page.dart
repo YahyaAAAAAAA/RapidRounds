@@ -24,7 +24,7 @@ import 'package:rapid_rounds/features/home/presentation/components/main_menu_sub
 import 'package:rapid_rounds/features/room/domain/entities/player.dart';
 import 'package:rapid_rounds/features/room/domain/entities/room.dart';
 import 'package:rapid_rounds/features/room/presentation/cubits/room_cubit.dart';
-import 'package:rapid_rounds/features/room/presentation/cubits/room_state.dart';
+import 'package:rapid_rounds/features/room/presentation/cubits/room_states.dart';
 
 class RoomPage extends StatefulWidget {
   final String roomId;
@@ -70,24 +70,24 @@ class _RoomPageState extends State<RoomPage> {
           }
 
           if (state is RoomWaiting) {
-            final players = state.roomWithPlayers.players;
+            final players = state.roomDetailed.players;
 
             return _buildRoomWaiting(players);
           }
 
           if (state is RoomInGame) {
             return _buildMiniGame(
-                state.roomWithPlayers.room, state.roomWithPlayers.games);
+                state.roomDetailed.room, state.roomDetailed.games);
           }
 
           if (state is RoomBetweenRounds) {
-            final players = state.roomWithPlayers.players;
+            final players = state.roomDetailed.players;
 
             return _buildBetweenRounds(players, state);
           }
 
           if (state is RoomGameOver) {
-            final players = state.roomWithPlayers.players;
+            final players = state.roomDetailed.players;
             return _buildLeaderboard(players);
           }
 
@@ -111,7 +111,7 @@ class _RoomPageState extends State<RoomPage> {
       bottomNavigationBar: BlocBuilder<RoomCubit, RoomStates>(
         builder: (context, state) {
           if (state is RoomInGame) {
-            final players = state.roomWithPlayers.players;
+            final players = state.roomDetailed.players;
             return ClipRRect(
               borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(kOutterRadius),

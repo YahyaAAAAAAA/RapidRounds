@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rapid_rounds/config/enums/room_state.dart';
 import 'package:rapid_rounds/features/games/game.dart';
@@ -10,7 +9,7 @@ import 'package:rapid_rounds/features/games/match%20color/patterns.dart';
 import 'package:rapid_rounds/features/games/reaction%20button/reaction_button.dart';
 import 'package:rapid_rounds/features/room/domain/entities/player.dart';
 import 'package:rapid_rounds/features/room/domain/room_repo.dart';
-import 'package:rapid_rounds/features/room/presentation/cubits/room_state.dart';
+import 'package:rapid_rounds/features/room/presentation/cubits/room_states.dart';
 import 'package:uuid/uuid.dart';
 
 class RoomCubit extends Cubit<RoomStates> {
@@ -234,24 +233,5 @@ class RoomCubit extends Cubit<RoomStates> {
   Future<void> close() {
     roomSubscription?.cancel();
     return super.close();
-  }
-
-  //---color match---
-  List<Color> commonColors = [
-    Colors.red,
-    Colors.blue,
-    Colors.green,
-  ];
-
-  List<Color> generateColors(int count) {
-    List<Color> randomColors = [];
-
-    while (randomColors.length < count) {
-      int randomIndex = Random().nextInt(commonColors.length);
-
-      randomColors.add(commonColors[randomIndex]);
-    }
-
-    return randomColors;
   }
 }

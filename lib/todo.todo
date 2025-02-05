@@ -12,7 +12,7 @@ main:
     ✔ fix web icon @done(25-02-04 04:08)
     ✔ join room ui @done(25-02-04 04:08)
     ✔ move images to server @done(25-02-04 04:08)
-    ☐ work on display time limit 
+    ☐ work on display time limit @started(25-02-05 20:18)
     ☐ max player count should be either in db or passed on room creation
     ☐ test on mobile/web
     ☐ check the comebacks

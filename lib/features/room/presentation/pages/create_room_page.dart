@@ -17,7 +17,7 @@ import 'package:rapid_rounds/features/room/presentation/components/create_room_c
 import 'package:rapid_rounds/features/room/presentation/components/game_list_item.dart';
 import 'package:rapid_rounds/features/room/presentation/components/games_list.dart';
 import 'package:rapid_rounds/features/room/presentation/cubits/room_cubit.dart';
-import 'package:rapid_rounds/features/room/presentation/cubits/room_state.dart';
+import 'package:rapid_rounds/features/room/presentation/cubits/room_states.dart';
 import 'room_page.dart';
 
 class CreateRoomPage extends StatefulWidget {

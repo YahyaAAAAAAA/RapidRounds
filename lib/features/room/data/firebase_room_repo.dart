@@ -53,15 +53,20 @@ class FirebaseRoomRepo implements RoomRepo {
   }
 
   Future<void> addGames(String roomId, List<Game> games) async {
+    WriteBatch batch = FirebaseFirestore.instance.batch();
+    CollectionReference gamesCollection = FirebaseFirestore.instance
+        .collection('rooms')
+        .doc(roomId)
+        .collection('games');
+
     for (int i = 0; i < games.length; i++) {
       games[i].roomId = roomId;
-      await FirebaseFirestore.instance
-          .collection('rooms')
-          .doc(roomId)
-          .collection('games')
-          .doc(i.toString()) //games[i].id
-          .set(games[i].toJson());
+      DocumentReference docRef = gamesCollection.doc(i.toString());
+
+      batch.set(docRef, games[i].toJson());
     }
+
+    await batch.commit();
   }
 
   @override
@@ -166,7 +171,7 @@ class FirebaseRoomRepo implements RoomRepo {
   }
 
   @override
-  Stream<RoomWithPlayers> listen(String roomId) {
+  Stream<RoomDetailed> listen(String roomId) {
     final roomRef = FirebaseFirestore.instance.collection('rooms').doc(roomId);
     final playersRef = roomRef.collection('players');
     final gamesRef = roomRef.collection('games');
@@ -204,7 +209,7 @@ class FirebaseRoomRepo implements RoomRepo {
     //combine the room, players and games streams into one
     return Rx.combineLatest3(roomStream, playersStream, gamesStream,
         (Room room, List<Player> players, List<Game> games) {
-      return RoomWithPlayers(room: room, players: players, games: games);
+      return RoomDetailed(room: room, players: players, games: games);
     });
   }
 
@@ -330,6 +335,58 @@ class FirebaseRoomRepo implements RoomRepo {
 
   @override
   Future<void> onPlayerComplete(
+    String roomId,
+    String playerId,
+    int? delay,
+    bool? didFail,
+  ) async {
+    final playerRef = FirebaseFirestore.instance
+        .collection('rooms')
+        .doc(roomId)
+        .collection('players')
+        .doc(playerId);
+
+    final roomRef = FirebaseFirestore.instance.collection('rooms').doc(roomId);
+
+    await FirebaseFirestore.instance.runTransaction((transaction) async {
+      // Fetch latest player data
+      final playerSnapshot = await transaction.get(playerRef);
+      if (!playerSnapshot.exists) {
+        throw Exception('Player has left the game.');
+      }
+
+      final playerData = playerSnapshot.data() as Map<String, dynamic>;
+
+      // Calculate elapsed time
+      final DateTime roundStartTime = (await transaction.get(roomRef))
+              .data()?['roundStartTime']
+              ?.toDate()
+              ?.toUtc() ??
+          DateTime.now().toUtc();
+
+      final int elapsedMicroSeconds =
+          DateTime.now().toUtc().difference(roundStartTime).inMicroseconds;
+
+      // Append finish time
+      final List<int> finishTimes =
+          List<int>.from(playerData['finishTimes'] ?? []);
+      finishTimes.add(elapsedMicroSeconds - (delay ?? 0));
+
+      // Append fail status
+      final List<bool> fails = List<bool>.from(playerData['fails'] ?? []);
+      fails.add(didFail ?? false);
+
+      // Update player state atomically
+      transaction.update(playerRef, {
+        'state': PlayerState.done.name,
+        'finishTimes': finishTimes,
+        'fails': fails,
+      });
+    });
+  }
+
+  @override
+  Future<void> onPlayerCompleteTemp(
     String roomId,
     String playerId,
     int? delay,

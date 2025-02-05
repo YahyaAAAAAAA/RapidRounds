@@ -24,7 +24,7 @@ abstract class RoomRepo {
 
   Future<bool> isCreatorLeft(String roomId);
 
-  Stream<RoomWithPlayers> listen(String roomId);
+  Stream<RoomDetailed> listen(String roomId);
 
   Future<void> deleteRoom(String roomId);
 

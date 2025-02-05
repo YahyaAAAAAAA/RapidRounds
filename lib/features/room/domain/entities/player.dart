@@ -1,13 +1,13 @@
 import 'package:rapid_rounds/config/enums/player_state.dart';
 
 class Player {
-  final String id;
-  final String name;
-  int avatar;
-  PlayerState state;
-  int points;
-  List<int> finishTimes;
-  List<bool> fails;
+  late final String id;
+  late final String name;
+  late int avatar;
+  late PlayerState state;
+  late int points;
+  late List<int> finishTimes;
+  late List<bool> fails;
 
   Player({
     required this.id,
@@ -19,16 +19,14 @@ class Player {
     this.fails = const [],
   });
 
-  factory Player.fromJson(Map<String, dynamic> json) {
-    return Player(
-      id: json['id'],
-      name: json['name'],
-      avatar: json['avatar'],
-      points: json['points'] ?? 0,
-      state: PlayerState.values.firstWhere((e) => e.name == json['state']),
-      finishTimes: List<int>.from(json['finishTimes'] ?? []),
-      fails: List<bool>.from(json['fails'] ?? []),
-    );
+  Player.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    name = json['name'];
+    avatar = json['avatar'];
+    points = json['points'] ?? 0;
+    state = PlayerState.values.firstWhere((e) => e.name == json['state']);
+    finishTimes = List<int>.from(json['finishTimes'] ?? []);
+    fails = List<bool>.from(json['fails'] ?? []);
   }
 
   Map<String, dynamic> toJson() {

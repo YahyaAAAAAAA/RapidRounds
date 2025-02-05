@@ -10,7 +10,7 @@ import 'package:rapid_rounds/config/utils/global_colors.dart';
 import 'package:rapid_rounds/config/utils/global_loading.dart';
 import 'package:rapid_rounds/features/home/presentation/components/main_menu_sub_appbar.dart';
 import 'package:rapid_rounds/features/room/presentation/cubits/room_cubit.dart';
-import 'package:rapid_rounds/features/room/presentation/cubits/room_state.dart';
+import 'package:rapid_rounds/features/room/presentation/cubits/room_states.dart';
 import 'room_page.dart';
 
 class JoinRoomPage extends StatefulWidget {

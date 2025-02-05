@@ -12,19 +12,19 @@ class RoomCreated extends RoomStates {
 }
 
 class RoomWaiting extends RoomStates {
-  final RoomWithPlayers roomWithPlayers;
-  RoomWaiting(this.roomWithPlayers);
+  final RoomDetailed roomDetailed;
+  RoomWaiting(this.roomDetailed);
 }
 
 class RoomInGame extends RoomStates {
-  final RoomWithPlayers roomWithPlayers;
+  final RoomDetailed roomDetailed;
 
-  RoomInGame(this.roomWithPlayers);
+  RoomInGame(this.roomDetailed);
 }
 
 class RoomGameOver extends RoomStates {
-  final RoomWithPlayers roomWithPlayers;
-  RoomGameOver(this.roomWithPlayers);
+  final RoomDetailed roomDetailed;
+  RoomGameOver(this.roomDetailed);
 }
 
 class RoomDeleted extends RoomStates {}
@@ -39,8 +39,8 @@ class RoomLeft extends RoomStates {}
 class RoundDone extends RoomStates {}
 
 class RoomBetweenRounds extends RoomStates {
-  final RoomWithPlayers roomWithPlayers;
+  final RoomDetailed roomDetailed;
   final int minTime;
 
-  RoomBetweenRounds(this.roomWithPlayers, this.minTime);
+  RoomBetweenRounds(this.roomDetailed, this.minTime);
 }
